@@ -1,0 +1,4 @@
+class Config {
+  static final baseUrl = '';
+  static final timeout = const Duration(seconds: 60);
+}
