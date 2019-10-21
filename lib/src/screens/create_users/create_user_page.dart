@@ -4,6 +4,7 @@ import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/screens/create_users/add_employee_page.dart';
 import 'package:ia_mobile/src/screens/create_users/add_member_page.dart';
+import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 
 class CreateUserPage extends StatefulWidget {
@@ -15,7 +16,28 @@ class _CreateUserPageState extends State<CreateUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _appBar(),
+      drawer: MenuDrawer(),
       body: _body(),
+    );
+  }
+
+  Widget _appBar() {
+    return AppBar(
+      title: Text(
+        LocaleSingleton.strings.peopleManagement,
+        style: TextStyle(
+          fontSize: 22.0,
+          fontFamily: 'WorkSans Bold',
+        ),
+      ),
+      backgroundColor: Ui.primaryColor,
+      centerTitle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(10),
+        ),
+      ),
     );
   }
 

@@ -15,7 +15,7 @@ class SpanishStrings extends Strings {
     super.passwordError = 'Debe ingresar una contraseña';
     super.search = 'Buscar';
     super.add = 'Agregar';
-    super.paySalaries = 'Liquidar los Sueldos';
+    super.paySalaries = 'Liquidar Sueldos';
     super.billSubscription = 'Facturar Abono';
     super.addMember = 'Agregar Socio';
     super.email = 'Email';
@@ -42,5 +42,11 @@ class SpanishStrings extends Strings {
     super.employeeType = 'Tipo de Empleado';
     super.amoutPerHour = 'Costo por hora';
     super.amoutPerHourErrro = 'Debe ingresar un Costo';
+    super.month = 'Mes';
+    super.year = 'Año';
+    super.payAll = 'Liquidar todos';
+    super.start = 'Inicio';
+    super.peopleManagement = 'Manejo de Personas';
+    super.update = 'Modificar';
   }
 }

@@ -19,15 +19,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: MenuDrawer(),
       appBar: _appBar(),
-      body: _buildBody(),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
   Widget _appBar() {
     return AppBar(
       title: Text(
-        LocaleSingleton.strings.appTitle,
+        LocaleSingleton.strings.search,
         style: TextStyle(
           fontSize: 22.0,
           fontFamily: 'WorkSans Bold',
@@ -41,92 +39,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  Widget _buildBody() {
-    switch (currentItem) {
-      case TabItem.SEARCH_PAGE:
-        return SearchPage();
-      case TabItem.ADD_PAGE:
-        return CreateUserPage();
-    }
-
-    return SearchPage();
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return BottomAppBar(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 4.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: _navBarOptions(),
-        ),
-      ),
-    );
-  }
-
-  List<Widget> _navBarOptions() {
-    List<Widget> list = [
-      _buildItem(
-        icon: Icons.search,
-        tabItem: TabItem.SEARCH_PAGE,
-        text: LocaleSingleton.strings.search,
-      ),
-      _buildItem(
-        icon: Icons.person_add,
-        tabItem: TabItem.ADD_PAGE,
-        text: LocaleSingleton.strings.add,
-      ),
-    ];
-    list.removeWhere((value) => value == null);
-    return list.toList();
-  }
-
-  Widget _buildItem({IconData icon, TabItem tabItem, String text}) {
-    return Expanded(
-      child: GestureDetector(
-        child: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(
-                  icon,
-                  color: _iconColorMatching(item: tabItem),
-                ),
-                Text(
-                  text,
-                  style: TextStyle(
-                    color: _colorTextMatching(item: tabItem),
-                    fontSize: 14.0,
-                    fontFamily: 'WorkSans Bold',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        onTap: () => _updateCurrentItem(item: tabItem),
-      ),
-    );
-  }
-
-  _updateCurrentItem({TabItem item}) {
-    setState(() {
-      currentItem = item;
-    });
-  }
-
-  Color _iconColorMatching({TabItem item}) {
-    return currentItem == item ? Ui.primaryColor : null;
-  }
-
-  Color _colorTextMatching({TabItem item}) {
-    return currentItem == item ? Ui.primaryColor : Colors.black87;
   }
 }

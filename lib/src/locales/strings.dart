@@ -40,4 +40,10 @@ class Strings {
   String employeeType;
   String amoutPerHour;
   String amoutPerHourErrro;
+  String month;
+  String year;
+  String payAll;
+  String start;
+  String peopleManagement;
+  String update;
 }

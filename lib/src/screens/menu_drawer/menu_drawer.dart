@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/screens/create_users/create_user_page.dart';
+import 'package:ia_mobile/src/screens/home_page.dart';
+import 'package:ia_mobile/src/screens/search/search_page.dart';
+import 'package:ia_mobile/src/screens/transactions/pay_salaries.dart';
 
 class MenuDrawer extends StatefulWidget {
   @override
@@ -21,9 +26,14 @@ class _MenuDrawerState extends State<MenuDrawer> {
       child: Column(
         children: <Widget>[
           _header(),
-          _button(LocaleSingleton.strings.paySalaries),
+          _button(LocaleSingleton.strings.start, _goToHomePage),
           Divider(color: Colors.grey[700], thickness: 0.5),
-          _button(LocaleSingleton.strings.billSubscription),
+          _button(
+              LocaleSingleton.strings.peopleManagement, _goToPeopleManagement),
+          Divider(color: Colors.grey[700], thickness: 0.5),
+          _button(LocaleSingleton.strings.paySalaries, _goToPaySalaries),
+          Divider(color: Colors.grey[700], thickness: 0.5),
+          _button(LocaleSingleton.strings.billSubscription, () {}),
           Divider(color: Colors.grey[700], thickness: 0.5),
           // Expanded(child: SizedBox()),
           // Divider(color: Colors.black),
@@ -45,7 +55,22 @@ class _MenuDrawerState extends State<MenuDrawer> {
     );
   }
 
-  Widget _button(String text) {
+  _goToPaySalaries() {
+    Navigator.pop(context);
+    GeneralNavigator(context, PaySalariesPage()).replaceNavigate();
+  }
+
+  _goToHomePage() {
+    Navigator.pop(context);
+    GeneralNavigator(context, HomePage()).replaceNavigate();
+  }
+
+  _goToPeopleManagement() {
+    Navigator.pop(context);
+    GeneralNavigator(context, CreateUserPage()).replaceNavigate();
+  }
+
+  Widget _button(String text, function) {
     return ListTile(
       title: Text(
         text,
@@ -55,6 +80,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
           fontFamily: 'WorkSans Regular',
         ),
       ),
+      onTap: () => function(),
     );
   }
 }

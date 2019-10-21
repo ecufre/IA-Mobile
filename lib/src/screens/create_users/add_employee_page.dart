@@ -31,8 +31,8 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   String _lastName;
   String _email;
   String _sex;
-  bool _state = false;
-  int _dni;
+  String _dni;
+  String _amountPerHour;
   EmployeeType _employeeType;
 
   TextEditingController _nameController = TextEditingController();
@@ -113,6 +113,8 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
         return _pageOne();
       case FormMember.pageTwo:
         return _pageTwo();
+      case FormMember.Detail:
+        return _pageDetail();
     }
     return null;
   }
@@ -145,8 +147,8 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
         child: CustomRaisedButton(
-          text: LocaleSingleton.strings.accept.toUpperCase(),
-          function: () => _checkConnectivity(() => _validateAndSubmit()),
+          text: LocaleSingleton.strings.carryOn.toUpperCase(),
+          function: () => _moveToPageDetail(),
           context: context,
           buttonColor: Ui.primaryColor,
           textColor: Colors.white,
@@ -155,6 +157,39 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
           circularRadius: 3.5,
         ),
       )
+    ]);
+  }
+
+  Widget _pageDetail() {
+    return Column(children: <Widget>[
+      _pageDetailWidgets(),
+      Padding(
+          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+          child: Column(
+            children: <Widget>[
+              CustomRaisedButton(
+                text: LocaleSingleton.strings.update.toUpperCase(),
+                function: () => _moveToPageOne(),
+                context: context,
+                buttonColor: Ui.primaryColor,
+                textColor: Colors.white,
+                fontSize: 17.5,
+                fontFamily: 'WorkSans Bold',
+                circularRadius: 3.5,
+              ),
+              SizedBox(height: 20.0),
+              CustomRaisedButton(
+                text: LocaleSingleton.strings.accept.toUpperCase(),
+                function: () => _submit(),
+                context: context,
+                buttonColor: Ui.primaryColor,
+                textColor: Colors.white,
+                fontSize: 17.5,
+                fontFamily: 'WorkSans Bold',
+                circularRadius: 3.5,
+              ),
+            ],
+          ))
     ]);
   }
 
@@ -182,6 +217,87 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
           _builtEmployeeType(),
           _builtAmountPerHour(),
         ],
+      ),
+    );
+  }
+
+  Widget _pageDetailWidgets() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "Datos Personales",
+            style: TextStyle(
+              color: Colors.black,
+              fontFamily: 'WorkSans Bold',
+              fontSize: 23.0,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          Card(
+            child: Column(
+              children: <Widget>[
+                _detail(LocaleSingleton.strings.name, _name),
+                Divider(),
+                _detail(LocaleSingleton.strings.lastName, _lastName),
+                Divider(),
+                _detail(LocaleSingleton.strings.dni, _dni),
+                Divider(),
+                _detail(LocaleSingleton.strings.sex, _sex),
+                Divider(),
+                _detail(LocaleSingleton.strings.email, _email),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            "Datos para el gimnsaio",
+            style: TextStyle(
+              color: Colors.black,
+              fontFamily: 'WorkSans Bold',
+              fontSize: 23.0,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          Card(
+            child: Column(
+              children: <Widget>[
+                _detail(LocaleSingleton.strings.employeeType,
+                    _employeeType.description),
+                Divider(),
+                _detail(LocaleSingleton.strings.amoutPerHour, _amountPerHour),
+                Divider(),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _detail(
+    String title,
+    String message,
+  ) {
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Colors.black,
+          fontFamily: 'WorkSans Bold',
+          fontSize: 17.0,
+        ),
+      ),
+      subtitle: Text(
+        message,
+        style: TextStyle(
+          color: Colors.black,
+          fontFamily: 'WorkSans Regular',
+          fontSize: 15.0,
+        ),
       ),
     );
   }
@@ -294,7 +410,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
           ),
         ),
         autocorrect: false,
-        onSaved: (val) => _lastName = val,
+        onSaved: (val) => _dni = val,
         validator: (val) =>
             val.isEmpty ? LocaleSingleton.strings.dniError : null,
         textCapitalization: TextCapitalization.sentences,
@@ -490,7 +606,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
           ),
         ),
         autocorrect: false,
-        onSaved: (val) => _lastName = val,
+        onSaved: (val) => _amountPerHour = val,
         validator: (val) =>
             val.isEmpty ? LocaleSingleton.strings.amoutPerHourErrro : null,
         textCapitalization: TextCapitalization.sentences,
@@ -510,6 +626,21 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     return _employeeType != null;
   }
 
+  _moveToPageOne() {
+    _resetTextFocus();
+    try {
+      setState(() {
+        _formType = FormMember.pageOne;
+        _nameController.text = _name;
+        _lastNameController.text = _lastName;
+        _dniController.text = _dni;
+        _emailController.text = _email;
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   _moveToPageTwo() {
     _resetTextFocus();
     final FormState form = _formkey.currentState;
@@ -518,6 +649,22 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
       try {
         setState(() {
           _formType = FormMember.pageTwo;
+          _amountPerHourController.text = _amountPerHour;
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+  }
+
+  _moveToPageDetail() {
+    _resetTextFocus();
+    final FormState form = _formkey.currentState;
+    if (_validateAndSave(_pageTwoWidgetValidation)) {
+      form.reset();
+      try {
+        setState(() {
+          _formType = FormMember.Detail;
         });
       } catch (e) {
         print(e.toString());
@@ -557,13 +704,11 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     return false;
   }
 
-  void _validateAndSubmit() async {
-    if (_validateAndSave(_pageTwoWidgetValidation)) {
-      try {
-        _checkConnectivity(_createAction);
-      } catch (e) {
-        print(e.toString());
-      }
+  void _submit() async {
+    try {
+      _checkConnectivity(_createAction);
+    } catch (e) {
+      print(e.toString());
     }
   }
 
