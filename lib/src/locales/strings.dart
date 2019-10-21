@@ -11,4 +11,8 @@ class Strings {
   String userError;
   String password;
   String passwordError;
+  String search;
+  String add;
+  String paySalaries;
+  String billSubscription;
 }
