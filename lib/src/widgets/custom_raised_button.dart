@@ -38,25 +38,29 @@ class CustomRaisedButton extends StatelessWidget {
     return Row(
       children: <Widget>[
         Expanded(
-          child: RaisedButton(
-            elevation: this.elevation,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                  width: this.boderSideWidth, color: this.boderSideColor),
-              borderRadius:
-                  BorderRadius.all(Radius.circular(this.circularRadius)),
-            ),
-            color: this.buttonColor,
-            onPressed: function,
-            child: Text(
-              text,
-              style: TextStyle(
-                color: this.textColor,
-                fontSize: this.fontSize,
-                fontFamily: this.fontFamily,
-                fontWeight: this.fontWeight,
+          child: Container(
+            height: this.height,
+            width: this.width,
+            child: RaisedButton(
+              elevation: this.elevation,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                    width: this.boderSideWidth, color: this.boderSideColor),
+                borderRadius:
+                    BorderRadius.all(Radius.circular(this.circularRadius)),
               ),
-              textAlign: TextAlign.center,
+              color: this.buttonColor,
+              onPressed: function,
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: this.textColor,
+                  fontSize: this.fontSize,
+                  fontFamily: this.fontFamily,
+                  fontWeight: this.fontWeight,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),

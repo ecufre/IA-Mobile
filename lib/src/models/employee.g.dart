@@ -7,14 +7,24 @@ part of 'employee.dart';
 // **************************************************************************
 
 Employee _$EmployeeFromJson(Map<String, dynamic> json) {
-  return Employee(tipo: json['tipo'] as String, sueldo: json['sueldo'] as int)
+  return Employee(
+      fileNumber: json['legajo'] as String,
+      dateAdded: json['fechaAlta'] == null
+          ? null
+          : DateTime.parse(json['fechaAlta'] as String),
+      state: json['estado'] as bool)
     ..name = json['nombre'] as String
-    ..id = json['id'] as int;
+    ..lastName = json['apellido'] as String
+    ..dni = json['dni'] as int
+    ..email = json['email'] as String;
 }
 
 Map<String, dynamic> _$EmployeeToJson(Employee instance) => <String, dynamic>{
       'nombre': instance.name,
-      'id': instance.id,
-      'tipo': instance.tipo,
-      'sueldo': instance.sueldo
+      'apellido': instance.lastName,
+      'dni': instance.dni,
+      'email': instance.email,
+      'legajo': instance.fileNumber,
+      'fechaAlta': instance.dateAdded?.toIso8601String(),
+      'estado': instance.state
     };

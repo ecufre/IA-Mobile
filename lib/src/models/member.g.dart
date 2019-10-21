@@ -7,14 +7,32 @@ part of 'member.dart';
 // **************************************************************************
 
 Member _$MemberFromJson(Map<String, dynamic> json) {
-  return Member(tipo: json['tipo'] as String, sueldo: json['sueldo'] as int)
+  return Member(
+      id: json['id'] as int,
+      dateAdded: json['fechaAlta'] == null
+          ? null
+          : DateTime.parse(json['fechaAlta'] as String),
+      state: json['estado'] as bool,
+      authorizedSince: json['habilitadoDesde'] == null
+          ? null
+          : DateTime.parse(json['habilitadoDesde'] as String),
+      authorizedUpTo: json['habilitadoHasta'] == null
+          ? null
+          : DateTime.parse(json['habilitadoHasta'] as String))
     ..name = json['nombre'] as String
-    ..id = json['id'] as int;
+    ..lastName = json['apellido'] as String
+    ..dni = json['dni'] as int
+    ..email = json['email'] as String;
 }
 
 Map<String, dynamic> _$MemberToJson(Member instance) => <String, dynamic>{
       'nombre': instance.name,
+      'apellido': instance.lastName,
+      'dni': instance.dni,
+      'email': instance.email,
       'id': instance.id,
-      'tipo': instance.tipo,
-      'sueldo': instance.sueldo
+      'fechaAlta': instance.dateAdded?.toIso8601String(),
+      'estado': instance.state,
+      'habilitadoDesde': instance.authorizedSince?.toIso8601String(),
+      'habilitadoHasta': instance.authorizedUpTo?.toIso8601String()
     };

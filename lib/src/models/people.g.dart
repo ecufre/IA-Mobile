@@ -7,8 +7,16 @@ part of 'people.dart';
 // **************************************************************************
 
 People _$PeopleFromJson(Map<String, dynamic> json) {
-  return People(name: json['nombre'] as String, id: json['id'] as int);
+  return People(
+      name: json['nombre'] as String,
+      lastName: json['apellido'] as String,
+      dni: json['dni'] as int,
+      email: json['email'] as String);
 }
 
-Map<String, dynamic> _$PeopleToJson(People instance) =>
-    <String, dynamic>{'nombre': instance.name, 'id': instance.id};
+Map<String, dynamic> _$PeopleToJson(People instance) => <String, dynamic>{
+      'nombre': instance.name,
+      'apellido': instance.lastName,
+      'dni': instance.dni,
+      'email': instance.email
+    };

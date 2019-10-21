@@ -5,10 +5,14 @@ part 'people.g.dart';
 class People {
   @JsonKey(name: 'nombre')
   String name;
-  @JsonKey(name: 'id')
-  int id;
+  @JsonKey(name: 'apellido')
+  String lastName;
+  @JsonKey(name: 'dni')
+  int dni;
+  @JsonKey(name: 'email')
+  String email;
 
-  People({this.name, this.id});
+  People({this.name, this.lastName, this.dni, this.email});
   factory People.fromJson(Map<String, dynamic> json) => _$PeopleFromJson(json);
 
   Map<String, dynamic> toJson() => _$PeopleToJson(this);

@@ -16,14 +16,17 @@ class _CreateUserPageState extends State<CreateUserPage> {
   }
 
   Widget _body() {
-    return Column(
-      children: <Widget>[
-        _button("Agregar Administrativo", () {}),
-        SizedBox(height: 20.0),
-        _button("Agregar Profesor", () {}),
-        SizedBox(height: 20.0),
-        _button("Agregar Socio", () {}),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+      child: Column(
+        children: <Widget>[
+          _button("Agregar Administrativo", () {}),
+          SizedBox(height: 20.0),
+          _button("Agregar Profesor", () {}),
+          SizedBox(height: 20.0),
+          _button("Agregar Socio", () {}),
+        ],
+      ),
     );
   }
 
@@ -35,7 +38,10 @@ class _CreateUserPageState extends State<CreateUserPage> {
       buttonColor: Ui.primaryColor,
       textColor: Colors.white,
       elevation: 0.0,
+      fontSize: 17.0,
       fontFamily: 'WorkSans Regular',
+      circularRadius: 5.0,
+      height: 50.0,
     );
   }
 }

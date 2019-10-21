@@ -4,12 +4,14 @@ part 'employee.g.dart';
 
 @JsonSerializable()
 class Employee extends People {
-  @JsonKey(name: 'tipo')
-  String tipo;
-  @JsonKey(name: 'sueldo')
-  int sueldo;
+  @JsonKey(name: 'legajo')
+  String fileNumber;
+  @JsonKey(name: 'fechaAlta')
+  DateTime dateAdded;
+  @JsonKey(name: 'estado')
+  bool state;
 
-  Employee({this.tipo, this.sueldo}) : super();
+  Employee({this.fileNumber, this.dateAdded, this.state}) : super();
 
   factory Employee.fromJson(Map<String, dynamic> json) =>
       _$EmployeeFromJson(json);
