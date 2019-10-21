@@ -6,56 +6,53 @@ import 'package:ia_mobile/src/commons/general_regex.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/helpers/validator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/models/employeeType.dart';
 import 'package:ia_mobile/src/providers/connectivity_service.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
-class AddMemberPage extends StatefulWidget {
+class AddEmployeePage extends StatefulWidget {
   @override
-  _AddMemberPageState createState() => new _AddMemberPageState();
+  _AddEmployeePageState createState() => new _AddEmployeePageState();
 }
 
-class _AddMemberPageState extends State<AddMemberPage> {
+class _AddEmployeePageState extends State<AddEmployeePage> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   FormMember _formType = FormMember.pageOne;
   Validator validator = Validator();
   List<String> _sexList = ["Masculino", "Femenino"];
+  List<EmployeeType> _employeeTypeList = [
+    EmployeeType(id: 1, description: "Administrativo", amountPerHour: "200"),
+    EmployeeType(id: 2, description: "Profesor", amountPerHour: "100"),
+  ];
   List<bool> _noErrors = [];
   String _name;
   String _lastName;
   String _email;
   String _sex;
-  String _doctor;
-  String _date;
-  String _doctorPhone;
   bool _state = false;
   int _dni;
+  EmployeeType _employeeType;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _dniController = TextEditingController();
-  TextEditingController _doctorController = TextEditingController();
-  TextEditingController _doctorPhoneController = TextEditingController();
-  TextEditingController _dateController = TextEditingController();
+  TextEditingController _amountPerHourController = TextEditingController();
 
   FocusNode textNameFocusNode = FocusNode();
   FocusNode textLastNameFocusNode = FocusNode();
   FocusNode textEmailFocusNode = FocusNode();
   FocusNode textDniFocusNode = FocusNode();
-  FocusNode textDoctorFocusNode = FocusNode();
-  FocusNode textDoctorPhoneFocusNode = FocusNode();
-  FocusNode textDateFocusNode = FocusNode();
+  FocusNode textAmountPerHourFocusNode = FocusNode();
 
   void _resetTextFocus() {
     textNameFocusNode.unfocus();
     textLastNameFocusNode.unfocus();
     textLastNameFocusNode.unfocus();
     textDniFocusNode.unfocus();
-    textDoctorFocusNode.unfocus();
-    textDoctorPhoneFocusNode.unfocus();
-    textDateFocusNode.unfocus();
+    textAmountPerHourFocusNode.unfocus();
   }
 
   @override
@@ -64,9 +61,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
     _lastNameController.dispose();
     _emailController.dispose();
     _dniController.dispose();
-    _doctorController.dispose();
-    _doctorPhoneController.dispose();
-    _dateController.dispose();
+    _amountPerHourController.dispose();
     super.dispose();
   }
 
@@ -87,7 +82,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
   Widget _appBar() {
     return AppBar(
       title: Text(
-        LocaleSingleton.strings.addMember,
+        LocaleSingleton.strings.addEmployee,
         style: TextStyle(
           fontSize: 22.0,
           fontFamily: 'WorkSans Bold',
@@ -184,9 +179,8 @@ class _AddMemberPageState extends State<AddMemberPage> {
       key: _formkey,
       child: Column(
         children: <Widget>[
-          _builtDoctor(),
-          _builtDoctorPhone(),
-          _builtDate(),
+          _builtEmployeeType(),
+          _builtAmountPerHour(),
         ],
       ),
     );
@@ -356,7 +350,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
     return GestureDetector(
       onTap: () => _resetTextFocus(),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: Container(
           decoration: BoxDecoration(
               color: Colors.white,
@@ -409,115 +403,72 @@ class _AddMemberPageState extends State<AddMemberPage> {
     );
   }
 
-  // Widget _builtState() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-  //     child: CheckboxListTile(
-  //       title: Text(
-  //         _state
-  //             ? LocaleSingleton.strings.enable
-  //             : LocaleSingleton.strings.disable,
-  //         style: TextStyle(
-  //           fontFamily: 'WorkSans Regular',
-  //           fontSize: 15,
-  //           color: Colors.black,
-  //         ),
-  //       ),
-  //       value: _state,
-  //       onChanged: (value) {
-  //         setState(() => _state = value);
-  //       },
-  //     ),
-  //   );
-  // }
-
-  Widget _builtDoctor() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: CustomTextFormField(
-        controller: _doctorController,
-        focusNode: textDoctorFocusNode,
-        key: Key('doctor'),
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Regular',
-          fontSize: 15.0,
-        ),
-        onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(textDoctorPhoneFocusNode);
-        },
-        keyboardType: TextInputType.text,
-        decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.doctor.toUpperCase(),
-          labelStyle: TextStyle(
-            fontFamily: 'WorkSans Regular',
-            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
-            color: Colors.black,
+  Widget _builtEmployeeType() {
+    return GestureDetector(
+      onTap: () => _resetTextFocus(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(5.0),
+              ),
+              border: Border.all(color: Colors.black38)),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<dynamic>(
+              key: widget.key,
+              isExpanded: true,
+              hint: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    LocaleSingleton.strings.employeeType,
+                    style: TextStyle(
+                      fontFamily: 'WorkSans Regular',
+                      fontSize: 15,
+                      color: Colors.black,
+                    ),
+                  )),
+              items: _employeeTypeList.map(
+                (dropDownItem) {
+                  return DropdownMenuItem<dynamic>(
+                    value: dropDownItem,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        dropDownItem.description,
+                        style: TextStyle(
+                          fontFamily: 'WorkSans Regular',
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+              onChanged: (dynamic newValueSelected) {
+                setState(() {
+                  _employeeType = newValueSelected;
+                });
+              },
+              value: _employeeTypeList.contains(_employeeType)
+                  ? _employeeType
+                  : null,
+            ),
           ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Ui.primaryColor),
-          ),
         ),
-        autocorrect: false,
-        onSaved: (val) => _doctor = val,
-        validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.doctorError : null,
-        textCapitalization: TextCapitalization.sentences,
-        noErrorsCallback: (bool val) => _confirmErrors(val),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(75),
-        ],
       ),
     );
   }
 
-  Widget _builtDoctorPhone() {
+  Widget _builtAmountPerHour() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: CustomTextFormField(
-        controller: _doctorPhoneController,
-        focusNode: textDoctorPhoneFocusNode,
-        key: Key('doctorPhone'),
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Regular',
-          fontSize: 15.0,
-        ),
-        onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(textDateFocusNode);
-        },
-        keyboardType: TextInputType.text,
-        decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.doctorPhone.toUpperCase(),
-          labelStyle: TextStyle(
-            fontFamily: 'WorkSans Regular',
-            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
-            color: Colors.black,
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Ui.primaryColor),
-          ),
-        ),
-        autocorrect: false,
-        onSaved: (val) => _doctorPhone = val,
-        validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.doctorPhoneError : null,
-        textCapitalization: TextCapitalization.sentences,
-        noErrorsCallback: (bool val) => _confirmErrors(val),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(75),
-        ],
-      ),
-    );
-  }
-
-  Widget _builtDate() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: CustomTextFormField(
-        controller: _dateController,
-        focusNode: textDateFocusNode,
-        key: Key('date'),
+        controller: _amountPerHourController,
+        focusNode: textAmountPerHourFocusNode,
+        key: Key('amountPerHour'),
         style: TextStyle(
           color: Colors.black,
           fontFamily: 'WorkSans Regular',
@@ -528,7 +479,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
         },
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.date.toUpperCase(),
+          labelText: LocaleSingleton.strings.amoutPerHour.toUpperCase(),
           labelStyle: TextStyle(
             fontFamily: 'WorkSans Regular',
             fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
@@ -539,9 +490,9 @@ class _AddMemberPageState extends State<AddMemberPage> {
           ),
         ),
         autocorrect: false,
-        onSaved: (val) => _date = val,
+        onSaved: (val) => _lastName = val,
         validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.dateError : null,
+            val.isEmpty ? LocaleSingleton.strings.amoutPerHourErrro : null,
         textCapitalization: TextCapitalization.sentences,
         noErrorsCallback: (bool val) => _confirmErrors(val),
         inputFormatters: [
@@ -556,7 +507,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
   }
 
   _pageTwoWidgetValidation() {
-    return true;
+    return _employeeType != null;
   }
 
   _moveToPageTwo() {

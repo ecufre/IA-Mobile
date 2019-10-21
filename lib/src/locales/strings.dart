@@ -36,4 +36,8 @@ class Strings {
   String doctorPhoneError;
   String date;
   String dateError;
+  String addEmployee;
+  String employeeType;
+  String amoutPerHour;
+  String amoutPerHourErrro;
 }

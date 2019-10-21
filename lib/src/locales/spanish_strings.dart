@@ -38,5 +38,9 @@ class SpanishStrings extends Strings {
     super.doctorPhoneError = 'Debe ingresar el teléfono de un médico';
     super.date = 'Fecha de la ficha médica';
     super.dateError = 'Debe ingresar una fecha';
+    super.addEmployee = 'Agregar Empleado';
+    super.employeeType = 'Tipo de Empleado';
+    super.amoutPerHour = 'Costo por hora';
+    super.amoutPerHourErrro = 'Debe ingresar un Costo';
   }
 }
