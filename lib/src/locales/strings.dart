@@ -15,4 +15,25 @@ class Strings {
   String add;
   String paySalaries;
   String billSubscription;
+  String addMember;
+  String email;
+  String emailError;
+  String emailEmptyError;
+  String name;
+  String nameError;
+  String lastName;
+  String lastNameError;
+  String dni;
+  String dniError;
+  String sex;
+  String enable;
+  String disable;
+  String cancel;
+  String carryOn;
+  String doctor;
+  String doctorError;
+  String doctorPhone;
+  String doctorPhoneError;
+  String date;
+  String dateError;
 }

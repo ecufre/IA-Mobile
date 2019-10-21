@@ -17,5 +17,26 @@ class SpanishStrings extends Strings {
     super.add = 'Agregar';
     super.paySalaries = 'Liquidar los Sueldos';
     super.billSubscription = 'Facturar Abono';
+    super.addMember = 'Agregar Socio';
+    super.email = 'Email';
+    super.emailError = 'Email debe ser válido.';
+    super.emailEmptyError = 'Debe ingresar un Email';
+    super.name = 'Nombre';
+    super.nameError = 'Debe ingresar un nombre';
+    super.lastName = 'Apellido';
+    super.lastNameError = 'Debe ingresar un apellido';
+    super.dni = 'DNI';
+    super.dniError = 'Debe ingresar un DNI';
+    super.sex = 'Sexo';
+    super.enable = 'Activo';
+    super.disable = 'Inactivo';
+    super.cancel = 'Cancelar';
+    super.carryOn = 'Siguiente';
+    super.doctor = 'Médico';
+    super.doctorError = 'Debe ingresar un médico';
+    super.doctorPhone = 'Teléfono de un Médico';
+    super.doctorPhoneError = 'Debe ingresar el teléfono de un médico';
+    super.date = 'Fecha de la ficha médica';
+    super.dateError = 'Debe ingresar una fecha';
   }
 }
