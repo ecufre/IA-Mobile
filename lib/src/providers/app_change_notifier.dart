@@ -25,13 +25,13 @@ class AppGeneralNotifier with ChangeNotifier {
   }
 
   _removeUserData() {
-    PrefsSingleton.prefs.remove('accessToken');
-    PrefsSingleton.prefs.remove('rol');
-    PrefsSingleton.prefs.remove('username');
-    PrefsSingleton.prefs.remove('surname');
-    PrefsSingleton.prefs.remove('email');
-    PrefsSingleton.prefs.remove('name');
-    PrefsSingleton.prefs.remove('pending_uploads');
-    PrefsSingleton.prefs.remove('data_saved');
+    // PrefsSingleton.prefs.remove('accessToken');
+    // PrefsSingleton.prefs.remove('rol');
+    // PrefsSingleton.prefs.remove('username');
+    // PrefsSingleton.prefs.remove('surname');
+    // PrefsSingleton.prefs.remove('email');
+    // PrefsSingleton.prefs.remove('name');
+    // PrefsSingleton.prefs.remove('pending_uploads');
+    // PrefsSingleton.prefs.remove('data_saved');
   }
 }

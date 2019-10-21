@@ -15,13 +15,49 @@ dependencies:
   provider: ^3.1.0
   connectivity: ^0.4.4
   http: any
+  json_annotation: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^1.0.0
+  json_serializable: ^2.0.0
 
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: WorkSans Black
+      fonts:
+        - asset: assets/fonts/WorkSans-Black.ttf
+    - family: WorkSans Bold
+      fonts:
+        - asset: assets/fonts/WorkSans-Bold.ttf
+    - family: WorkSans ExtraBold
+      fonts:
+        - asset: assets/fonts/WorkSans-ExtraBold.ttf
+    - family: WorkSans ExtraLight
+      fonts:
+        - asset: assets/fonts/WorkSans-ExtraLight.ttf
+    - family: WorkSans Light
+      fonts:
+        - asset: assets/fonts/WorkSans-Light.ttf        
+    - family: WorkSans Medium
+      fonts:
+        - asset: assets/fonts/WorkSans-Medium.ttf    
+    - family: WorkSans Regular
+      fonts:
+        - asset: assets/fonts/WorkSans-Regular.ttf    
+    - family: WorkSans SemiBold
+      fonts:
+        - asset: assets/fonts/WorkSans-SemiBold.ttf                
+    - family: WorkSans Thin
+      fonts:
+        - asset: assets/fonts/WorkSans-Thin.ttf  
+        
+  assets:
+  - 'assets/animations/'
+  - 'assets/images/'
+  - 'assets/icons/'
 
  

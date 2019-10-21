@@ -5,4 +5,10 @@ class Strings {
   String emptyBody;
   String sectionError;
   String accept;
+  String welcome;
+  String insertYourAccount;
+  String user;
+  String userError;
+  String password;
+  String passwordError;
 }
