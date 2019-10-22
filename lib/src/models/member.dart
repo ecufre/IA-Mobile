@@ -4,24 +4,12 @@ part 'member.g.dart';
 
 @JsonSerializable()
 class Member extends People {
-  @JsonKey(name: 'id')
-  int id;
-  @JsonKey(name: 'fechaAlta')
-  DateTime dateAdded;
-  @JsonKey(name: 'estado')
-  bool state;
   @JsonKey(name: 'habilitadoDesde')
   DateTime authorizedSince;
   @JsonKey(name: 'habilitadoHasta')
   DateTime authorizedUpTo;
 
-  Member(
-      {this.id,
-      this.dateAdded,
-      this.state,
-      this.authorizedSince,
-      this.authorizedUpTo})
-      : super();
+  Member({this.authorizedSince, this.authorizedUpTo}) : super();
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
 

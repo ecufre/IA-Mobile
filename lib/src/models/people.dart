@@ -11,8 +11,21 @@ class People {
   int dni;
   @JsonKey(name: 'email')
   String email;
+  @JsonKey(name: 'sexo')
+  String sex;
+  @JsonKey(name: 'fechaNacimiento')
+  DateTime birthDate;
+  @JsonKey(name: 'fechaAlta')
+  DateTime dateAdded;
 
-  People({this.name, this.lastName, this.dni, this.email});
+  People(
+      {this.name,
+      this.lastName,
+      this.dni,
+      this.email,
+      this.sex,
+      this.birthDate,
+      this.dateAdded});
   factory People.fromJson(Map<String, dynamic> json) => _$PeopleFromJson(json);
 
   Map<String, dynamic> toJson() => _$PeopleToJson(this);

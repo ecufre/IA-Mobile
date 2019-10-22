@@ -25,10 +25,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   FormMember _formType = FormMember.pageOne;
   Validator validator = Validator();
   List<String> _sexList = ["Masculino", "Femenino"];
-  List<EmployeeType> _employeeTypeList = [
-    EmployeeType(id: 1, description: "Administrativo", amountPerHour: "200"),
-    EmployeeType(id: 2, description: "Profesor", amountPerHour: "100"),
-  ];
+  List<EmployeeType> _employeeTypeList = List();
   List<Class> _listClasses = List();
   List<bool> _listBoolClasses = List();
   List<bool> _noErrors = [];
@@ -93,11 +90,20 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   _getClasses() {
     ApiModule().getClasses().then((result) {
       setState(() {
-        _isLoading = false;
         _listClasses = result;
         _listClasses.forEach((item) {
           _listBoolClasses.add(false);
         });
+      });
+      _getEmployeeTypes();
+    });
+  }
+
+  _getEmployeeTypes() {
+    ApiModule().getEmployeeTypes().then((result) {
+      setState(() {
+        _employeeTypeList = result;
+        _isLoading = false;
       });
     });
   }

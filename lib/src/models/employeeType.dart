@@ -7,10 +7,10 @@ class EmployeeType {
   int id;
   @JsonKey(name: 'descripcion')
   String description;
-  @JsonKey(name: 'costoHora')
-  String amountPerHour;
+  @JsonKey(name: 'activo')
+  bool active;
 
-  EmployeeType({this.id, this.description, this.amountPerHour});
+  EmployeeType({this.id, this.description, this.active});
 
   factory EmployeeType.fromJson(Map<String, dynamic> json) =>
       _$EmployeeTypeFromJson(json);
