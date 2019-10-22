@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ia_mobile/src/commons/enums/tabItem.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
-import 'package:ia_mobile/src/screens/create_users/create_user_page.dart';
 import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
-import 'package:ia_mobile/src/screens/search/search_page.dart';
+import 'package:ia_mobile/src/widgets/search_bar.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,13 +10,62 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TabItem currentItem = TabItem.SEARCH_PAGE;
+  String _search;
+
+  TextEditingController _searchController = TextEditingController();
+  FocusNode textSearchFocusNode = FocusNode();
+
+  List _listMembers = [
+    {"Nombre": "Matias"},
+    {"Nombre": "Javier"},
+    {"Nombre": "Carlos"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Carlos"},
+    {"Nombre": "Matias"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Javier"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Matias"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Javier"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Matias"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Javier"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Javier"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Matias"},
+    {"Nombre": "Carlos"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Pedro"},
+    {"Nombre": "Carlos"},
+    {"Nombre": "Pedro"},
+  ];
+
+  void _resetTextFocus() {
+    textSearchFocusNode.unfocus();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MenuDrawer(),
       appBar: _appBar(),
+      body: _body(),
     );
   }
 
@@ -37,6 +84,69 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(10),
         ),
+      ),
+    );
+  }
+
+  Widget _body() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _searchbar(),
+          _members(),
+        ],
+      ),
+    );
+  }
+
+  Widget _searchbar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 20.0),
+      child: SearchBar(
+        controller: _searchController,
+        keyType: TextInputType.number,
+        hintText: LocaleSingleton.strings.search,
+        function: () {},
+      ),
+    );
+  }
+
+  Widget _members() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        addRepaintBoundaries: true,
+        itemCount: _listMembers.length,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Column(
+                children: <Widget>[
+                  ListTile(
+                    leading: CircleAvatar(
+                      radius: 30.0,
+                      backgroundImage:
+                          AssetImage("assets/images/anonymous_user.png"),
+                    ),
+                    title: Text(
+                      _listMembers[index]["Nombre"],
+                      style: TextStyle(
+                        fontFamily: 'WorkSans Regular',
+                        fontSize: 15.0,
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                ],
+              ),
+            ),
+            onTap: () {},
+          );
+        },
       ),
     );
   }

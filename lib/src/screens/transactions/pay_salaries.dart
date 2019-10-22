@@ -274,49 +274,50 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
         ),
         SizedBox(height: 20.0),
         ListView.builder(
-            shrinkWrap: true,
-            addRepaintBoundaries: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: _listEmployees.length,
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ListTile(
-                        leading: CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage:
-                              AssetImage("assets/images/anonymous_user.png"),
+          shrinkWrap: true,
+          addRepaintBoundaries: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: _listEmployees.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 30.0,
+                        backgroundImage:
+                            AssetImage("assets/images/anonymous_user.png"),
+                      ),
+                      title: Text(
+                        _listEmployees[index]["Nombre"],
+                        style: TextStyle(
+                          fontFamily: 'WorkSans Regular',
+                          fontSize: 15.0,
                         ),
-                        title: Text(
-                          _listEmployees[index]["Nombre"],
-                          style: TextStyle(
-                            fontFamily: 'WorkSans Regular',
-                            fontSize: 15.0,
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            _listEmployees[index]["Tipo"],
+                            style: TextStyle(
+                              fontFamily: 'WorkSans Regular',
+                              fontSize: 13.0,
+                            ),
                           ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              _listEmployees[index]["Tipo"],
-                              style: TextStyle(
-                                fontFamily: 'WorkSans Regular',
-                                fontSize: 13.0,
-                              ),
+                          Text(
+                            _listEmployees[index]["Año"],
+                            style: TextStyle(
+                              fontFamily: 'WorkSans Regular',
+                              fontSize: 13.0,
                             ),
-                            Text(
-                              _listEmployees[index]["Año"],
-                              style: TextStyle(
-                                fontFamily: 'WorkSans Regular',
-                                fontSize: 13.0,
-                              ),
-                            ),
-                          ],
-                        ))),
-                onTap: () {},
-              );
-            }),
+                          ),
+                        ],
+                      ))),
+              onTap: () {},
+            );
+          },
+        ),
       ],
     );
   }
