@@ -4,8 +4,7 @@ import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/screens/create_users/create_user_page.dart';
 import 'package:ia_mobile/src/screens/home_page.dart';
-import 'package:ia_mobile/src/screens/search/search_page.dart';
-import 'package:ia_mobile/src/screens/transactions/pay_salaries.dart';
+import 'package:ia_mobile/src/screens/transactions/pay_salaries_page.dart';
 
 class MenuDrawer extends StatefulWidget {
   @override
@@ -32,8 +31,6 @@ class _MenuDrawerState extends State<MenuDrawer> {
               LocaleSingleton.strings.peopleManagement, _goToPeopleManagement),
           Divider(color: Colors.grey[700], thickness: 0.5),
           _button(LocaleSingleton.strings.paySalaries, _goToPaySalaries),
-          Divider(color: Colors.grey[700], thickness: 0.5),
-          _button(LocaleSingleton.strings.billSubscription, () {}),
           Divider(color: Colors.grey[700], thickness: 0.5),
           // Expanded(child: SizedBox()),
           // Divider(color: Colors.black),

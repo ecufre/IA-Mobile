@@ -50,5 +50,12 @@ class SpanishStrings extends Strings {
     super.update = 'Modificar';
     super.personalData = 'Datos Personales';
     super.medicalData = 'Datos Médicos';
+    super.detailsMember = 'Datos Socio';
+    super.suscriptionType = 'Tipo de suscripción';
+    super.methodsOfPayment = 'Métodos de Pago';
+    super.billing = 'Facturar';
+    super.days = 'Días';
+    super.holidays = 'Feriados';
+    super.illness = 'Enfermedad';
   }
 }

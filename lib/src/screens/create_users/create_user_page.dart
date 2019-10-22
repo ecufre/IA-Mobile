@@ -5,7 +5,6 @@ import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/screens/create_users/add_employee_page.dart';
 import 'package:ia_mobile/src/screens/create_users/add_member_page.dart';
 import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
-import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 
 class CreateUserPage extends StatefulWidget {
   @override
@@ -43,32 +42,51 @@ class _CreateUserPageState extends State<CreateUserPage> {
 
   Widget _body() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
       child: Column(
         children: <Widget>[
-          _button(LocaleSingleton.strings.addEmployee, _goToAddEmployeePage),
-          SizedBox(height: 20.0),
-          _button(
-            LocaleSingleton.strings.addMember,
-            _goToAddMemberPage,
-          ),
+          _button(LocaleSingleton.strings.addEmployee, _goToAddEmployeePage,
+              "assets/images/member_image.png"),
+          SizedBox(height: 40.0),
+          _button(LocaleSingleton.strings.addMember, _goToAddMemberPage,
+              "assets/images/employee_image.png"),
         ],
       ),
     );
   }
 
-  Widget _button(String text, function) {
-    return CustomRaisedButton(
-      text: text,
-      function: () => function(),
-      context: context,
-      buttonColor: Ui.primaryColor,
-      textColor: Colors.white,
-      elevation: 0.0,
-      fontSize: 17.0,
-      fontFamily: 'WorkSans Regular',
-      circularRadius: 5.0,
-      height: 50.0,
+  Widget _button(String text, function, String image) {
+    return Container(
+      height: 200.0,
+      width: 300,
+      child: RaisedButton(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 17.0,
+                fontFamily: 'WorkSans Bold',
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20.0),
+            Image.asset(
+              image,
+              scale: 5.0,
+            ),
+          ],
+        ),
+        onPressed: () => function(),
+        color: Ui.primaryColor,
+        textColor: Colors.white,
+        elevation: 0.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        ),
+      ),
     );
   }
 

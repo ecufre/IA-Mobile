@@ -48,4 +48,11 @@ class Strings {
   String update;
   String personalData;
   String medicalData;
+  String detailsMember;
+  String suscriptionType;
+  String methodsOfPayment;
+  String billing;
+  String days;
+  String holidays;
+  String illness;
 }

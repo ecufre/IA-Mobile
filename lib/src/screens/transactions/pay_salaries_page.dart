@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
+import 'package:ia_mobile/src/screens/transactions/pay_salaries_detail_page.dart';
 
 class PaySalariesPage extends StatefulWidget {
   @override
@@ -121,26 +123,6 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Column(
         children: <Widget>[
-          Container(
-            height: 47.0,
-            width: MediaQuery.of(context).size.width,
-            child: RaisedButton(
-              child: Text(
-                LocaleSingleton.strings.search.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 17.5,
-                  fontFamily: 'WorkSans Bold',
-                ),
-              ),
-              onPressed: () {},
-              color: Ui.primaryColor,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(3.5)),
-              ),
-            ),
-          ),
-          SizedBox(height: 20.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -245,6 +227,26 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
               ),
             ],
           ),
+          SizedBox(height: 20.0),
+          Container(
+            height: 47.0,
+            width: MediaQuery.of(context).size.width,
+            child: RaisedButton(
+              child: Text(
+                LocaleSingleton.strings.search.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 17.5,
+                  fontFamily: 'WorkSans Bold',
+                ),
+              ),
+              onPressed: _month != null && _year != null ? () {} : null,
+              color: Ui.primaryColor,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(3.5)),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -314,7 +316,9 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
                           ),
                         ],
                       ))),
-              onTap: () {},
+              onTap: () {
+                GeneralNavigator(context, PaySalariesDetailPage()).navigate();
+              },
             );
           },
         ),

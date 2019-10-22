@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/screens/members/detail_member.dart';
 import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
 import 'package:ia_mobile/src/widgets/search_bar.dart';
 
@@ -144,7 +146,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            onTap: () {},
+            onTap: () =>
+                GeneralNavigator(context, DetailMemeberPage()).navigate(),
           );
         },
       ),

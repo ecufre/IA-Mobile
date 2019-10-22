@@ -168,32 +168,33 @@ class _AddMemberPageState extends State<AddMemberPage> {
     return Column(children: <Widget>[
       _pageDetailWidgets(),
       Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-          child: Column(
-            children: <Widget>[
-              CustomRaisedButton(
-                text: LocaleSingleton.strings.update.toUpperCase(),
-                function: () => _moveToPageOne(),
-                context: context,
-                buttonColor: Ui.primaryColor,
-                textColor: Colors.white,
-                fontSize: 17.5,
-                fontFamily: 'WorkSans Bold',
-                circularRadius: 3.5,
-              ),
-              SizedBox(height: 20.0),
-              CustomRaisedButton(
-                text: LocaleSingleton.strings.accept.toUpperCase(),
-                function: () => _submit(),
-                context: context,
-                buttonColor: Ui.primaryColor,
-                textColor: Colors.white,
-                fontSize: 17.5,
-                fontFamily: 'WorkSans Bold',
-                circularRadius: 3.5,
-              ),
-            ],
-          ))
+        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+        child: Column(
+          children: <Widget>[
+            CustomRaisedButton(
+              text: LocaleSingleton.strings.update.toUpperCase(),
+              function: () => _moveToPageOne(),
+              context: context,
+              buttonColor: Ui.primaryColor,
+              textColor: Colors.white,
+              fontSize: 17.5,
+              fontFamily: 'WorkSans Bold',
+              circularRadius: 3.5,
+            ),
+            SizedBox(height: 20.0),
+            CustomRaisedButton(
+              text: LocaleSingleton.strings.accept.toUpperCase(),
+              function: () => _submit(),
+              context: context,
+              buttonColor: Ui.primaryColor,
+              textColor: Colors.white,
+              fontSize: 17.5,
+              fontFamily: 'WorkSans Bold',
+              circularRadius: 3.5,
+            ),
+          ],
+        ),
+      )
     ]);
   }
 
@@ -407,11 +408,12 @@ class _AddMemberPageState extends State<AddMemberPage> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(5.0),
-              ),
-              border: Border.all(color: Colors.black38)),
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(5.0),
+            ),
+            border: Border.all(color: Colors.black38),
+          ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<dynamic>(
               key: widget.key,
