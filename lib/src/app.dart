@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ia_mobile/src/providers/app_change_notifier.dart';
 import 'package:ia_mobile/src/providers/connectivity_service.dart';
 import 'package:ia_mobile/src/screens/root_page.dart';
 import 'package:provider/provider.dart';
@@ -9,9 +8,6 @@ class IAApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppGeneralNotifier>(
-          builder: (_) => AppGeneralNotifier(),
-        ),
         ChangeNotifierProvider<ConnectivityServiceNotifier>(
           builder: (_) => ConnectivityServiceNotifier(),
         ),
