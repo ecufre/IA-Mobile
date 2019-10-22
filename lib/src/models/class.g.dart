@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'payment_method.dart';
+part of 'class.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PaymentMethod _$PaymentMethodFromJson(Map<String, dynamic> json) {
-  return PaymentMethod(id: json['id'] as int, name: json['nombre'] as String);
+Class _$ClassFromJson(Map<String, dynamic> json) {
+  return Class(id: json['id'] as int, name: json['nombre'] as String);
 }
 
-Map<String, dynamic> _$PaymentMethodToJson(PaymentMethod instance) =>
+Map<String, dynamic> _$ClassToJson(Class instance) =>
     <String, dynamic>{'id': instance.id, 'nombre': instance.name};

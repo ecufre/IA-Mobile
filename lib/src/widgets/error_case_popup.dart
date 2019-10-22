@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 
 class ErrorCasePopup extends StatelessWidget {
@@ -65,10 +66,16 @@ class ErrorCasePopup extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20.0),
                       child: RaisedButton(
-                        color: Colors.lightGreen,
+                        color: Ui.primaryColor,
                         textColor: Colors.white,
                         onPressed: () => _back(),
-                        child: Text(LocaleSingleton.strings.accept),
+                        child: Text(
+                          LocaleSingleton.strings.accept.toUpperCase(),
+                          style: TextStyle(
+                            fontFamily: 'WorkSans Bold',
+                            fontSize: 17.5,
+                          ),
+                        ),
                       ),
                     ),
                   ],

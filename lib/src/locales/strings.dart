@@ -61,4 +61,6 @@ class Strings {
   String workPerHour;
   String salary;
   String salaryError;
+  String professor;
+  String classes;
 }

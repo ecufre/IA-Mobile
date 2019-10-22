@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/error_case.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/models/passes_type.dart';
 import 'package:ia_mobile/src/models/payment_method.dart';
-import 'package:ia_mobile/src/services/modules/payment_method.dart';
+import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 
@@ -13,30 +15,39 @@ class BillSuscriptionPage extends StatefulWidget {
 
 class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
   bool _isLoading = true;
-  List<String> _suscriptionTypeList = [
-    "Día - \$20",
-    "Semana - \$120",
-    "Quincena - \$350",
-    "Mes - \$550",
-    "Semestre - \$1000",
-    "Año - \$5000"
-  ];
+  List<PassesType> _passesTypeList = List();
   List<PaymentMethod> _methodsOfPaymentList = List();
-  String _suscription;
-  String _methodOfPayment;
+  PassesType _passesType;
+  PaymentMethod _methodOfPayment;
   DateTime _upToDate;
 
   @override
   void initState() {
-    _getPaymentMethods();
+    _getPassesType();
+
     super.initState();
   }
 
   _getPaymentMethods() async {
-    PaymentMethodModule().getPeymentMethods().then((result) {
-      if (result['successful']) {
-        setState(() => _methodsOfPaymentList = result);
-      }
+    ApiModule().getPaymentMethods().then((result) {
+      setState(() {
+        _methodsOfPaymentList = result;
+        _isLoading = false;
+      });
+    }).catchError((error) {
+      errorCase(error.message, context);
+    });
+  }
+
+  _getPassesType() {
+    ApiModule().getPassesType().then((result) {
+      setState(() {
+        _passesTypeList = result;
+        _getPaymentMethods();
+      });
+    }).catchError((error) {
+      errorCase(error.message, context);
+      Navigator.pop(context);
     });
   }
 
@@ -106,14 +117,14 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
                     color: Colors.black,
                   ),
                 )),
-            items: _suscriptionTypeList.map(
+            items: _passesTypeList.map(
               (dropDownItem) {
                 return DropdownMenuItem<dynamic>(
                   value: dropDownItem,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Text(
-                      dropDownItem,
+                      "${dropDownItem.name} - \$${dropDownItem.price.toString()}",
                       style: TextStyle(
                         fontFamily: 'WorkSans Regular',
                         fontSize: 15,
@@ -127,37 +138,41 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
             onChanged: (dynamic newValueSelected) {
               _upToDateMethod(newValueSelected);
               setState(() {
-                _suscription = newValueSelected;
+                _passesType = newValueSelected;
               });
             },
-            value: _suscriptionTypeList.contains(_suscription)
-                ? _suscription
-                : null,
+            value: _passesTypeList.contains(_passesType) ? _passesType : null,
           ),
         ),
       ),
     );
   }
 
-  _upToDateMethod(String value) {
+  _upToDateMethod(PassesType value) {
     setState(() {
-      switch (value) {
-        case "Día - \$20":
+      switch (value.id) {
+        case 15:
           _upToDate = DateTime.now().add(Duration(days: 1));
           break;
-        case "Semana - \$120":
+        case 16:
           _upToDate = DateTime.now().add(Duration(days: 7));
           break;
-        case "Quincena - \$350":
+        case 17:
           _upToDate = DateTime.now().add(Duration(days: 15));
           break;
-        case "Mes - \$550":
+        case 18:
           _upToDate = DateTime.now().add(Duration(days: 30));
           break;
-        case "Semestre - \$1000":
+        case 19:
           _upToDate = DateTime.now().add(Duration(days: 60));
           break;
-        case "Año - \$5000":
+        case 20:
+          _upToDate = DateTime.now().add(Duration(days: 90));
+          break;
+        case 21:
+          _upToDate = DateTime.now().add(Duration(days: 180));
+          break;
+        case 22:
           _upToDate = DateTime.now().add(Duration(days: 365));
           break;
       }
@@ -165,7 +180,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
   }
 
   Widget _sinceAndUpToDetail() {
-    return _suscription != null
+    return _passesType != null
         ? Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
@@ -213,7 +228,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Text(
-                      "${dropDownItem.description} - \$${dropDownItem.value}",
+                      dropDownItem.name,
                       style: TextStyle(
                         fontFamily: 'WorkSans Regular',
                         fontSize: 15,
@@ -243,7 +258,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
       child: CustomRaisedButton(
         text: LocaleSingleton.strings.billing.toUpperCase(),
-        function: _suscription != null && _methodOfPayment != null
+        function: _passesType != null && _methodOfPayment != null
             ? () => Navigator.pop(context)
             : null,
         context: context,

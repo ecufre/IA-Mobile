@@ -6,8 +6,11 @@ import 'package:ia_mobile/src/commons/general_regex.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/helpers/validator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/models/class.dart';
 import 'package:ia_mobile/src/models/employeeType.dart';
 import 'package:ia_mobile/src/providers/connectivity_service.dart';
+import 'package:ia_mobile/src/services/modules/api_module.dart';
+import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +29,8 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     EmployeeType(id: 1, description: "Administrativo", amountPerHour: "200"),
     EmployeeType(id: 2, description: "Profesor", amountPerHour: "100"),
   ];
+  List<Class> _listClasses = List();
+  List<bool> _listBoolClasses = List();
   List<bool> _noErrors = [];
   String _name;
   String _lastName;
@@ -37,6 +42,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   EmployeeType _employeeType;
   bool _monthWorkState = false;
   bool _workPerHourState = false;
+  bool _isLoading = true;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
@@ -79,6 +85,24 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   }
 
   @override
+  void initState() {
+    _getClasses();
+    super.initState();
+  }
+
+  _getClasses() {
+    ApiModule().getClasses().then((result) {
+      setState(() {
+        _isLoading = false;
+        _listClasses = result;
+        _listClasses.forEach((item) {
+          _listBoolClasses.add(false);
+        });
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
@@ -106,12 +130,14 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   }
 
   Widget _body() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: _pageWidget(),
-      ),
-    );
+    return _isLoading
+        ? ColorLoaderPopup()
+        : SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _pageWidget(),
+            ),
+          );
   }
 
   Widget _pageWidget() {
@@ -225,6 +251,11 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
           _monthWorkState ? _builtSalary() : SizedBox(),
           _builtWorkTimeHour(),
           _workPerHourState ? _builtAmountPerHour() : SizedBox(),
+          (_employeeType != null) &&
+                  (_employeeType.description.toLowerCase() ==
+                      LocaleSingleton.strings.professor.toLowerCase())
+              ? _builtClasses()
+              : SizedBox(),
         ],
       ),
     );
@@ -649,6 +680,42 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     );
   }
 
+  Widget _builtClasses() {
+    return Column(
+      children: <Widget>[
+        Text(
+          LocaleSingleton.strings.classes,
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'WorkSans Regular',
+            fontSize: 15.0,
+          ),
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          addRepaintBoundaries: true,
+          itemCount: _listClasses.length,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            return CheckboxListTile(
+              title: Text(
+                _listClasses[index].name,
+                style: TextStyle(
+                  fontFamily: 'WorkSans Regular',
+                  fontSize: 15.0,
+                ),
+              ),
+              value: _listBoolClasses[index],
+              onChanged: (value) {
+                setState(() => _listBoolClasses[index] = value);
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _titleDetails(String text) {
     return Text(
       text,
@@ -686,7 +753,11 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
           _detail(
               LocaleSingleton.strings.employeeType, _employeeType.description),
           Divider(),
-          _detail(LocaleSingleton.strings.amoutPerHour, _amountPerHour),
+          _detail(
+              _monthWorkState
+                  ? LocaleSingleton.strings.monthWork
+                  : LocaleSingleton.strings.amoutPerHour,
+              _monthWorkState ? _salary : _amountPerHour),
           Divider(),
         ],
       ),

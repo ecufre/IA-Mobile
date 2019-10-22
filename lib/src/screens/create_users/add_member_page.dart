@@ -9,6 +9,7 @@ import 'package:ia_mobile/src/helpers/validator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/providers/connectivity_service.dart';
 import 'package:ia_mobile/src/screens/transactions/bill_suscription_page.dart';
+import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
   String _doctor;
   String _date;
   String _doctorPhone;
+  bool _isLoading = true;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();

@@ -5,12 +5,10 @@ part 'payment_method.g.dart';
 class PaymentMethod {
   @JsonKey(name: 'id')
   int id;
-  @JsonKey(name: 'descripcion')
-  String description;
-  @JsonKey(name: 'valor')
-  String value;
+  @JsonKey(name: 'nombre')
+  String name;
 
-  PaymentMethod({this.id, this.description, this.value});
+  PaymentMethod({this.id, this.name});
 
   factory PaymentMethod.fromJson(Map<String, dynamic> json) =>
       _$PaymentMethodFromJson(json);

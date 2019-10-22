@@ -4,7 +4,7 @@ class SpanishStrings extends Strings {
   SpanishStrings() {
     super.appTitle = 'Gimnasio';
     super.apiGenericError =
-        'Ocurrió un error, reintente o comuníquese con un Administrador del sistema';
+        'Ocurrió un error \n al intentar acceder al sistema';
     super.emptyBody = 'No hay resultados';
     super.accept = 'Aceptar';
     super.welcome = '¡Bienvenido!';
@@ -63,5 +63,7 @@ class SpanishStrings extends Strings {
     super.workPerHour = 'Trabajo por hora';
     super.salary = 'Sueldo';
     super.salaryError = 'Debe ingresar un sueldo';
+    super.professor = 'Profesor';
+    super.classes = 'Clases';
   }
 }
