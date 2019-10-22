@@ -207,7 +207,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
           _builtDNI(),
           _builtEmail(),
           _builtSex(),
-          //_builtState(),
         ],
       ),
     );
@@ -231,78 +230,12 @@ class _AddMemberPageState extends State<AddMemberPage> {
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Column(
         children: <Widget>[
-          Text(
-            "Datos Personales",
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'WorkSans Bold',
-              fontSize: 23.0,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          Card(
-            child: Column(
-              children: <Widget>[
-                _detail(LocaleSingleton.strings.name, _name),
-                Divider(),
-                _detail(LocaleSingleton.strings.lastName, _lastName),
-                Divider(),
-                _detail(LocaleSingleton.strings.dni, _dni),
-                Divider(),
-                _detail(LocaleSingleton.strings.sex, _sex),
-                Divider(),
-                _detail(LocaleSingleton.strings.email, _email),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text(
-            "Datos Médicos",
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'WorkSans Bold',
-              fontSize: 23.0,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          Card(
-            child: Column(
-              children: <Widget>[
-                _detail(LocaleSingleton.strings.doctor, _doctor),
-                Divider(),
-                _detail(LocaleSingleton.strings.doctorPhone, _doctorPhone),
-                Divider(),
-                _detail(LocaleSingleton.strings.date, _date),
-              ],
-            ),
-          )
+          _titleDetails(LocaleSingleton.strings.personalData),
+          _personalDataDetails(),
+          SizedBox(height: 10.0),
+          _titleDetails(LocaleSingleton.strings.medicalData),
+          _medicalDataDetails(),
         ],
-      ),
-    );
-  }
-
-  Widget _detail(
-    String title,
-    String message,
-  ) {
-    return ListTile(
-      title: Text(
-        title,
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Bold',
-          fontSize: 17.0,
-        ),
-      ),
-      subtitle: Text(
-        message,
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Regular',
-          fontSize: 15.0,
-        ),
       ),
     );
   }
@@ -662,6 +595,74 @@ class _AddMemberPageState extends State<AddMemberPage> {
         inputFormatters: [
           LengthLimitingTextInputFormatter(75),
         ],
+      ),
+    );
+  }
+
+  Widget _titleDetails(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: Colors.black,
+        fontFamily: 'WorkSans Bold',
+        fontSize: 23.0,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _personalDataDetails() {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          _detail(LocaleSingleton.strings.name, _name),
+          Divider(),
+          _detail(LocaleSingleton.strings.lastName, _lastName),
+          Divider(),
+          _detail(LocaleSingleton.strings.dni, _dni),
+          Divider(),
+          _detail(LocaleSingleton.strings.sex, _sex),
+          Divider(),
+          _detail(LocaleSingleton.strings.email, _email),
+        ],
+      ),
+    );
+  }
+
+  Widget _medicalDataDetails() {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          _detail(LocaleSingleton.strings.doctor, _doctor),
+          Divider(),
+          _detail(LocaleSingleton.strings.doctorPhone, _doctorPhone),
+          Divider(),
+          _detail(LocaleSingleton.strings.date, _date),
+        ],
+      ),
+    );
+  }
+
+  Widget _detail(
+    String title,
+    String message,
+  ) {
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Colors.black,
+          fontFamily: 'WorkSans Bold',
+          fontSize: 17.0,
+        ),
+      ),
+      subtitle: Text(
+        message,
+        style: TextStyle(
+          color: Colors.black,
+          fontFamily: 'WorkSans Regular',
+          fontSize: 15.0,
+        ),
       ),
     );
   }

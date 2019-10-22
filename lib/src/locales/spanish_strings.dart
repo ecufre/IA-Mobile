@@ -48,5 +48,7 @@ class SpanishStrings extends Strings {
     super.start = 'Inicio';
     super.peopleManagement = 'Manejo de Personas';
     super.update = 'Modificar';
+    super.personalData = 'Datos Personales';
+    super.medicalData = 'Datos Médicos';
   }
 }

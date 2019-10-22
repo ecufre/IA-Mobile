@@ -46,4 +46,6 @@ class Strings {
   String start;
   String peopleManagement;
   String update;
+  String personalData;
+  String medicalData;
 }
