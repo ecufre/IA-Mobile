@@ -33,19 +33,24 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   String _sex;
   String _dni;
   String _amountPerHour;
+  String _salary;
   EmployeeType _employeeType;
+  bool _monthWorkState = false;
+  bool _workPerHourState = false;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _dniController = TextEditingController();
   TextEditingController _amountPerHourController = TextEditingController();
+  TextEditingController _salaryController = TextEditingController();
 
   FocusNode textNameFocusNode = FocusNode();
   FocusNode textLastNameFocusNode = FocusNode();
   FocusNode textEmailFocusNode = FocusNode();
   FocusNode textDniFocusNode = FocusNode();
   FocusNode textAmountPerHourFocusNode = FocusNode();
+  FocusNode textSalaryFocusNode = FocusNode();
 
   void _resetTextFocus() {
     textNameFocusNode.unfocus();
@@ -53,6 +58,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     textLastNameFocusNode.unfocus();
     textDniFocusNode.unfocus();
     textAmountPerHourFocusNode.unfocus();
+    textSalaryFocusNode.unfocus();
   }
 
   @override
@@ -62,6 +68,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     _emailController.dispose();
     _dniController.dispose();
     _amountPerHourController.dispose();
+    _salaryController.dispose();
     super.dispose();
   }
 
@@ -214,7 +221,10 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
       child: Column(
         children: <Widget>[
           _builtEmployeeType(),
-          _builtAmountPerHour(),
+          _builtWorkTimeMonth(),
+          _monthWorkState ? _builtSalary() : SizedBox(),
+          _builtWorkTimeHour(),
+          _workPerHourState ? _builtAmountPerHour() : SizedBox(),
         ],
       ),
     );
@@ -506,6 +516,94 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                   : null,
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _builtWorkTimeMonth() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 17.0),
+      child: Card(
+        child: CheckboxListTile(
+          title: Text(
+            LocaleSingleton.strings.monthWork,
+            style: TextStyle(
+              fontSize: 17.0,
+              fontFamily: 'WorkSans Regular',
+            ),
+          ),
+          value: _monthWorkState,
+          onChanged: (value) {
+            setState(() {
+              _workPerHourState = false;
+              _monthWorkState = value;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _builtSalary() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: CustomTextFormField(
+        controller: _salaryController,
+        focusNode: textSalaryFocusNode,
+        key: Key('salary'),
+        style: TextStyle(
+          color: Colors.black,
+          fontFamily: 'WorkSans Regular',
+          fontSize: 15.0,
+        ),
+        onFieldSubmitted: (String value) {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: LocaleSingleton.strings.salary.toUpperCase(),
+          labelStyle: TextStyle(
+            fontFamily: 'WorkSans Regular',
+            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
+            color: Colors.black,
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Ui.primaryColor),
+          ),
+        ),
+        autocorrect: false,
+        onSaved: (val) => _salary = val,
+        validator: (val) =>
+            val.isEmpty ? LocaleSingleton.strings.salaryError : null,
+        textCapitalization: TextCapitalization.sentences,
+        noErrorsCallback: (bool val) => _confirmErrors(val),
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(75),
+        ],
+      ),
+    );
+  }
+
+  Widget _builtWorkTimeHour() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 17.0),
+      child: Card(
+        child: CheckboxListTile(
+          title: Text(
+            LocaleSingleton.strings.workPerHour,
+            style: TextStyle(
+              fontSize: 17.0,
+              fontFamily: 'WorkSans Regular',
+            ),
+          ),
+          value: _workPerHourState,
+          onChanged: (value) {
+            setState(() {
+              _monthWorkState = false;
+              _workPerHourState = value;
+            });
+          },
         ),
       ),
     );

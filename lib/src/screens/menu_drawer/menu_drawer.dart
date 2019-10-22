@@ -42,7 +42,12 @@ class _MenuDrawerState extends State<MenuDrawer> {
 
   Widget _header() {
     return DrawerHeader(
-      child: null,
+      child: Center(
+        child: CircleAvatar(
+          radius: 70,
+          backgroundImage: AssetImage("assets/images/the_rock_image.png"),
+        ),
+      ),
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/drawer_image.jpg'),

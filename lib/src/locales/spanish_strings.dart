@@ -59,5 +59,9 @@ class SpanishStrings extends Strings {
     super.illness = 'Enfermedad';
     super.studyDay = 'Día de Estudio';
     super.paySalary = 'Liquidar Sueldo';
+    super.monthWork = 'Trabajo por mes';
+    super.workPerHour = 'Trabajo por hora';
+    super.salary = 'Sueldo';
+    super.salaryError = 'Debe ingresar un sueldo';
   }
 }

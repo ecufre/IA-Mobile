@@ -57,4 +57,8 @@ class Strings {
   String illness;
   String studyDay;
   String paySalary;
+  String monthWork;
+  String workPerHour;
+  String salary;
+  String salaryError;
 }
