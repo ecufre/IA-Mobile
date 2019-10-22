@@ -4,9 +4,11 @@ import 'package:ia_mobile/src/commons/enums/ConnectivityStatus.dart';
 import 'package:ia_mobile/src/commons/enums/formMember.dart';
 import 'package:ia_mobile/src/commons/general_regex.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/helpers/validator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/providers/connectivity_service.dart';
+import 'package:ia_mobile/src/screens/transactions/bill_suscription_page.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
@@ -203,6 +205,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
       key: _formkey,
       child: Column(
         children: <Widget>[
+          _builtTitleOne(),
           _builtName(),
           _builtLastName(),
           _builtDNI(),
@@ -218,6 +221,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
       key: _formkey,
       child: Column(
         children: <Widget>[
+          _builtTitleTwo(),
           _builtDoctor(),
           _builtDoctorPhone(),
           _builtDate(),
@@ -238,6 +242,18 @@ class _AddMemberPageState extends State<AddMemberPage> {
           _medicalDataDetails(),
         ],
       ),
+    );
+  }
+
+  Widget _builtTitleOne() {
+    return Text(
+      LocaleSingleton.strings.personalData,
+      style: TextStyle(
+        color: Colors.black,
+        fontFamily: 'WorkSans Bold',
+        fontSize: 22.0,
+      ),
+      textAlign: TextAlign.center,
     );
   }
 
@@ -480,6 +496,18 @@ class _AddMemberPageState extends State<AddMemberPage> {
   //     ),
   //   );
   // }
+
+  Widget _builtTitleTwo() {
+    return Text(
+      LocaleSingleton.strings.medicalData,
+      style: TextStyle(
+        color: Colors.black,
+        fontFamily: 'WorkSans Bold',
+        fontSize: 22.0,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
 
   Widget _builtDoctor() {
     return Container(
@@ -765,6 +793,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
 
   _createAction() {
     Navigator.pop(context);
+    GeneralNavigator(context, BillSuscriptionPage()).navigate();
     // showDialog(
     //   barrierDismissible: false,
     //   context: context,

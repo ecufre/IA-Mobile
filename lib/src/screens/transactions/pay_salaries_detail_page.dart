@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 
 class PaySalariesDetailPage extends StatefulWidget {
   @override
@@ -11,8 +12,10 @@ class PaySalariesDetailPage extends StatefulWidget {
 class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
   bool _holidayState = false;
   bool _illnessState = false;
+  bool _studyDayState = false;
   int _holiday = 0;
   int _illness = 0;
+  int _studyDay = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +54,9 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
           _addHolidays(),
           _builtIllness(),
           _addIllness(),
+          _builtStudyDay(),
+          _addStudyDay(),
+          _button(),
         ],
       ),
     );
@@ -79,66 +85,74 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
 
   Widget _addHolidays() {
     return _holidayState
-        ? Column(
-            children: <Widget>[
-              Text(
-                LocaleSingleton.strings.days,
-                style: TextStyle(
-                  fontSize: 17.0,
-                  fontFamily: 'WorkSans Regular',
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+        ? Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  IconButton(
-                    icon: Image.asset(
-                      "assets/icons/less_icon.png",
-                      scale: 0.5,
+                  Text(
+                    LocaleSingleton.strings.days,
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontFamily: 'WorkSans Regular',
                     ),
-                    iconSize: 45.0,
-                    onPressed: () {
-                      setState(
-                        () => _holiday != 0 ? _holiday = _holiday - 1 : null,
-                      );
-                    },
                   ),
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5.0),
-                      ),
-                      border: Border.all(color: Colors.black38),
-                    ),
-                    child: Center(
-                      child: Text(
-                        _holiday.toString(),
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontFamily: 'WorkSans Bold',
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Image.asset(
+                          "assets/icons/less_icon.png",
+                          scale: 0.5,
                         ),
-                        textAlign: TextAlign.center,
+                        iconSize: 30.0,
+                        onPressed: () {
+                          setState(
+                            () =>
+                                _holiday != 0 ? _holiday = _holiday - 1 : null,
+                          );
+                        },
                       ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Image.asset(
-                      "assets/icons/pluss_icon.png",
-                      scale: 0.5,
-                    ),
-                    iconSize: 45.0,
-                    onPressed: () {
-                      setState(
-                        () => _holiday != 50 ? _holiday = _holiday + 1 : null,
-                      );
-                    },
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                          border: Border.all(color: Colors.black38),
+                        ),
+                        child: Center(
+                          child: Text(
+                            _holiday.toString(),
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              fontFamily: 'WorkSans Bold',
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Image.asset(
+                          "assets/icons/pluss_icon.png",
+                          scale: 0.5,
+                        ),
+                        iconSize: 30.0,
+                        onPressed: () {
+                          setState(
+                            () =>
+                                _holiday != 50 ? _holiday = _holiday + 1 : null,
+                          );
+                        },
+                      )
+                    ],
                   )
                 ],
-              )
-            ],
+              ),
+            ),
           )
         : SizedBox();
   }
@@ -166,67 +180,188 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
 
   Widget _addIllness() {
     return _illnessState
-        ? Column(
-            children: <Widget>[
-              Text(
-                LocaleSingleton.strings.days,
-                style: TextStyle(
-                  fontSize: 17.0,
-                  fontFamily: 'WorkSans Regular',
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+        ? Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  IconButton(
-                    icon: Image.asset(
-                      "assets/icons/less_icon.png",
-                      scale: 0.5,
+                  Text(
+                    LocaleSingleton.strings.days,
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontFamily: 'WorkSans Regular',
                     ),
-                    iconSize: 45.0,
-                    onPressed: () {
-                      setState(
-                        () => _illness != 0 ? _illness = _illness - 1 : null,
-                      );
-                    },
                   ),
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5.0),
-                      ),
-                      border: Border.all(color: Colors.black38),
-                    ),
-                    child: Center(
-                      child: Text(
-                        _illness.toString(),
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontFamily: 'WorkSans Bold',
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Image.asset(
+                          "assets/icons/less_icon.png",
+                          scale: 0.5,
                         ),
-                        textAlign: TextAlign.center,
+                        iconSize: 30.0,
+                        onPressed: () {
+                          setState(
+                            () =>
+                                _illness != 0 ? _illness = _illness - 1 : null,
+                          );
+                        },
                       ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Image.asset(
-                      "assets/icons/pluss_icon.png",
-                      scale: 0.5,
-                    ),
-                    iconSize: 45.0,
-                    onPressed: () {
-                      setState(
-                        () => _illness != 100 ? _illness = _illness + 1 : null,
-                      );
-                    },
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                          border: Border.all(color: Colors.black38),
+                        ),
+                        child: Center(
+                          child: Text(
+                            _illness.toString(),
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              fontFamily: 'WorkSans Bold',
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Image.asset(
+                          "assets/icons/pluss_icon.png",
+                          scale: 0.5,
+                        ),
+                        iconSize: 30.0,
+                        onPressed: () {
+                          setState(
+                            () =>
+                                _illness != 50 ? _illness = _illness + 1 : null,
+                          );
+                        },
+                      )
+                    ],
                   )
                 ],
-              )
-            ],
+              ),
+            ),
           )
         : SizedBox();
+  }
+
+  Widget _builtStudyDay() {
+    return Card(
+      child: CheckboxListTile(
+        title: Text(
+          LocaleSingleton.strings.studyDay,
+          style: TextStyle(
+            fontSize: 17.0,
+            fontFamily: 'WorkSans Regular',
+          ),
+        ),
+        value: _studyDayState,
+        onChanged: (value) {
+          setState(() {
+            _studyDay = 0;
+            _studyDayState = value;
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _addStudyDay() {
+    return _studyDayState
+        ? Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    LocaleSingleton.strings.days,
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontFamily: 'WorkSans Regular',
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Image.asset(
+                          "assets/icons/less_icon.png",
+                          scale: 0.5,
+                        ),
+                        iconSize: 30.0,
+                        onPressed: () {
+                          setState(
+                            () => _studyDay != 0
+                                ? _studyDay = _studyDay - 1
+                                : null,
+                          );
+                        },
+                      ),
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                          border: Border.all(color: Colors.black38),
+                        ),
+                        child: Center(
+                          child: Text(
+                            _studyDay.toString(),
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              fontFamily: 'WorkSans Bold',
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Image.asset(
+                          "assets/icons/pluss_icon.png",
+                          scale: 0.5,
+                        ),
+                        iconSize: 30.0,
+                        onPressed: () {
+                          setState(
+                            () => _studyDay != 50
+                                ? _studyDay = _studyDay + 1
+                                : null,
+                          );
+                        },
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          )
+        : SizedBox();
+  }
+
+  Widget _button() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 25.0),
+      child: CustomRaisedButton(
+        text: LocaleSingleton.strings.paySalary.toUpperCase(),
+        function: () {},
+        context: context,
+        buttonColor: Ui.primaryColor,
+        textColor: Colors.white,
+        fontSize: 17.5,
+        fontFamily: 'WorkSans Bold',
+        circularRadius: 3.5,
+      ),
+    );
   }
 }

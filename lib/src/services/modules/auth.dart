@@ -9,11 +9,6 @@ class AuthModule {
   String baseUrl = Config.baseUrl;
   String modulePath = 'account/';
   ApiResponse apiResponse = ApiResponse();
-  BuildContext context;
-
-  AuthModule({@required BuildContext context}) {
-    this.context = context;
-  }
 
   // POST
   login(String username, String password) async {

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/models/payment_method.dart';
+import 'package:ia_mobile/src/services/modules/payment_method.dart';
+import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 
 class BillSuscriptionPage extends StatefulWidget {
@@ -9,6 +12,7 @@ class BillSuscriptionPage extends StatefulWidget {
 }
 
 class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
+  bool _isLoading = true;
   List<String> _suscriptionTypeList = [
     "Día - \$20",
     "Semana - \$120",
@@ -17,16 +21,25 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
     "Semestre - \$1000",
     "Año - \$5000"
   ];
-  List<String> _methodsOfPaymentList = [
-    "Débito",
-    "Tarjeta de Crédito",
-    "Tarjeta de Débito",
-    "Transferencia Bancaria",
-    "Mercado Pago"
-  ];
+  List<PaymentMethod> _methodsOfPaymentList = List();
   String _suscription;
   String _methodOfPayment;
   DateTime _upToDate;
+
+  @override
+  void initState() {
+    _getPaymentMethods();
+    super.initState();
+  }
+
+  _getPaymentMethods() async {
+    PaymentMethodModule().getPeymentMethods().then((result) {
+      if (result['successful']) {
+        setState(() => _methodsOfPaymentList = result);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,16 +68,18 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
   }
 
   Widget _body() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(height: 10.0),
-        _suscriptionType(),
-        _sinceAndUpToDetail(),
-        _methodsOfPayment(),
-        _button(),
-      ],
-    );
+    return _isLoading
+        ? ColorLoaderPopup()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 10.0),
+              _suscriptionType(),
+              _sinceAndUpToDetail(),
+              _methodsOfPayment(),
+              _button(),
+            ],
+          );
   }
 
   Widget _suscriptionType() {
@@ -198,7 +213,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Text(
-                      dropDownItem,
+                      "${dropDownItem.description} - \$${dropDownItem.value}",
                       style: TextStyle(
                         fontFamily: 'WorkSans Regular',
                         fontSize: 15,

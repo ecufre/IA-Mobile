@@ -715,6 +715,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
 
   _createAction() {
     Navigator.pop(context);
+
     // showDialog(
     //   barrierDismissible: false,
     //   context: context,

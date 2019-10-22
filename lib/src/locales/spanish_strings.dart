@@ -57,5 +57,7 @@ class SpanishStrings extends Strings {
     super.days = 'Días';
     super.holidays = 'Feriados';
     super.illness = 'Enfermedad';
+    super.studyDay = 'Día de Estudio';
+    super.paySalary = 'Liquidar Sueldo';
   }
 }

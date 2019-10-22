@@ -55,4 +55,6 @@ class Strings {
   String days;
   String holidays;
   String illness;
+  String studyDay;
+  String paySalary;
 }
