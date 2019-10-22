@@ -11,6 +11,7 @@ class SearchBar extends StatefulWidget {
     this.validation,
     @required this.keyType,
     this.function,
+    @required this.focusNode,
   });
   final TextEditingController controller;
 
@@ -20,21 +21,13 @@ class SearchBar extends StatefulWidget {
   final validation;
   final keyType;
   final function;
+  final focusNode;
 
   @override
   _SearchBarState createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<SearchBar> {
-  FocusNode searchFocus;
-
-  @override
-  void initState() {
-    searchFocus = FocusNode();
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,7 +53,7 @@ class _SearchBarState extends State<SearchBar> {
           child: TextFormField(
             key: Key('SearchBar'),
             controller: widget.controller,
-            focusNode: searchFocus,
+            focusNode: widget.focusNode,
             style: TextStyle(
               fontSize: 17.5,
               fontFamily: 'WorkSans Regular',

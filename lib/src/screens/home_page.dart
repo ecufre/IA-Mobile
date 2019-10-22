@@ -50,15 +50,32 @@ class _HomePageState extends State<HomePage> {
     {"Nombre": "Carlos"},
     {"Nombre": "Pedro"},
   ];
+  List _listFilterMembers = List();
+  _HomePageState() {
+    _searchController.addListener(() {
+      if (_searchController.text.isEmpty) {
+        setState(() => _search = "");
+        _filterMembers();
+      } else {
+        setState(() => _search = _searchController.text);
+        _filterMembers();
+      }
+    });
+  }
 
   void _resetTextFocus() {
     textSearchFocusNode.unfocus();
   }
 
   @override
+  void initState() {
+    _listFilterMembers.addAll(_listMembers);
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
-
     super.dispose();
   }
 
@@ -91,13 +108,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _body() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          _searchbar(),
-          _members(),
-        ],
+    return GestureDetector(
+      onTap: () => _resetTextFocus(),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            _searchbar(),
+            _members(),
+          ],
+        ),
       ),
     );
   }
@@ -107,9 +127,10 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 20.0),
       child: SearchBar(
         controller: _searchController,
+        focusNode: textSearchFocusNode,
         keyType: TextInputType.number,
         hintText: LocaleSingleton.strings.search,
-        function: () {},
+        function: () => _filterMembers(),
       ),
     );
   }
@@ -120,7 +141,7 @@ class _HomePageState extends State<HomePage> {
       child: ListView.builder(
         shrinkWrap: true,
         addRepaintBoundaries: true,
-        itemCount: _listMembers.length,
+        itemCount: _listFilterMembers.length,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
@@ -135,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                           AssetImage("assets/images/anonymous_user.png"),
                     ),
                     title: Text(
-                      _listMembers[index]["Nombre"],
+                      _listFilterMembers[index]["Nombre"],
                       style: TextStyle(
                         fontFamily: 'WorkSans Regular',
                         fontSize: 15.0,
@@ -152,5 +173,19 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     );
+  }
+
+  _filterMembers() {
+    _listFilterMembers.clear();
+    setState(() {
+      _listMembers.forEach((item) {
+        if (item['Nombre']
+            .toString()
+            .toLowerCase()
+            .contains(_search.toLowerCase())) {
+          _listFilterMembers.add(item);
+        }
+      });
+    });
   }
 }
