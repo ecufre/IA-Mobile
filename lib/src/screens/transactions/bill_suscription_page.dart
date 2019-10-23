@@ -11,6 +11,8 @@ import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/successful_page.dart';
 import 'package:ia_mobile/src/widgets/successful_popup.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class BillSuscriptionPage extends StatefulWidget {
   BillSuscriptionPage({@required this.member});
@@ -104,11 +106,12 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(
-              Radius.circular(5.0),
-            ),
-            border: Border.all(color: Colors.black38)),
+          color: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(5.0),
+          ),
+          border: Border.all(color: Colors.black38),
+        ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<dynamic>(
             key: widget.key,
@@ -186,17 +189,58 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
   }
 
   Widget _sinceAndUpToDetail() {
+    initializeDateFormatting();
     return _passesType != null
         ? Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("Desde"),
-                Text(DateTime.now().toString()),
-                Text("Hasta"),
-                Text(_upToDate.toString())
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5.0),
+                    ),
+                    border: Border.all(color: Colors.black38),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Desde"),
+                        Text(DateFormat.yMd('es_AR')
+                            .format(new DateTime.now())
+                            .toString()),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: 20.0),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5.0),
+                    ),
+                    border: Border.all(color: Colors.black38),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Hasta"),
+                        Text(DateFormat.yMd('es_AR')
+                            .format(_upToDate)
+                            .toString())
+                      ],
+                    ),
+                  ),
+                )
               ],
             ),
           )

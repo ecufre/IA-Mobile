@@ -41,16 +41,18 @@ class _CreateUserPageState extends State<CreateUserPage> {
   }
 
   Widget _body() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
-      child: Column(
-        children: <Widget>[
-          _button(LocaleSingleton.strings.addEmployee, _goToAddEmployeePage,
-              "assets/images/member_image.png"),
-          SizedBox(height: 40.0),
-          _button(LocaleSingleton.strings.addMember, _goToAddMemberPage,
-              "assets/images/employee_image.png"),
-        ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+        child: Column(
+          children: <Widget>[
+            _button(LocaleSingleton.strings.addEmployee, _goToAddEmployeePage,
+                "assets/images/member_image.png"),
+            SizedBox(height: 40.0),
+            _button(LocaleSingleton.strings.addMember, _goToAddMemberPage,
+                "assets/images/employee_image.png"),
+          ],
+        ),
       ),
     );
   }

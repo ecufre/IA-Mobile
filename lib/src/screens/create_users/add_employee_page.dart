@@ -249,6 +249,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
       child: Column(
         children: <Widget>[
           _titleDetails(LocaleSingleton.strings.personalData),
+          SizedBox(height: 10.0),
           _personalDataDetails(),
           SizedBox(height: 10.0),
           _titleDetails(LocaleSingleton.strings.employeeType),

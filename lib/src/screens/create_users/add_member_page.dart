@@ -206,6 +206,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
       child: Column(
         children: <Widget>[
           _titleDetails(LocaleSingleton.strings.personalData),
+          SizedBox(height: 10.0),
           _personalDataDetails(),
         ],
       ),
