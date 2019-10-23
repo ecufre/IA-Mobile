@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/models/member.dart';
 import 'package:ia_mobile/src/screens/members/detail_member.dart';
 import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
+import 'package:ia_mobile/src/services/modules/api_module.dart';
+import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/search_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,44 +16,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _search;
+  bool _isLoading = true;
 
   TextEditingController _searchController = TextEditingController();
   FocusNode textSearchFocusNode = FocusNode();
 
-  List _listMembers = [
-    {"Nombre": "Matias"},
-    {"Nombre": "Javier"},
-    {"Nombre": "Carlos"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Carlos"},
-    {"Nombre": "Matias"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Javier"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Matias"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Javier"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Matias"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Javier"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Javier"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Matias"},
-    {"Nombre": "Carlos"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Pedro"},
-    {"Nombre": "Carlos"},
-    {"Nombre": "Pedro"},
-  ];
-  List _listFilterMembers = List();
+  List<Member> _listMembers = List();
+  List<Member> _listFilterMembers = List();
   _HomePageState() {
     _searchController.addListener(() {
       if (_searchController.text.isEmpty) {
@@ -69,8 +41,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _listFilterMembers.addAll(_listMembers);
+    _getMembers();
+
     super.initState();
+  }
+
+  _getMembers() {
+    ApiModule().getMembers().then((result) {
+      setState(() {
+        _isLoading = false;
+        _listMembers = result;
+        _listFilterMembers.addAll(_listMembers);
+      });
+    });
   }
 
   @override
@@ -108,18 +91,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _body() {
-    return GestureDetector(
-      onTap: () => _resetTextFocus(),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            _searchbar(),
-            _members(),
-          ],
-        ),
-      ),
-    );
+    return _isLoading
+        ? ColorLoaderPopup()
+        : GestureDetector(
+            onTap: () => _resetTextFocus(),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _searchbar(),
+                  _members(),
+                ],
+              ),
+            ),
+          );
   }
 
   Widget _searchbar() {
@@ -156,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                           AssetImage("assets/images/anonymous_user.png"),
                     ),
                     title: Text(
-                      _listFilterMembers[index]["Nombre"],
+                      _listFilterMembers[index].name,
                       style: TextStyle(
                         fontFamily: 'WorkSans Regular',
                         fontSize: 15.0,
@@ -179,7 +164,7 @@ class _HomePageState extends State<HomePage> {
     _listFilterMembers.clear();
     setState(() {
       _listMembers.forEach((item) {
-        if (item['Nombre']
+        if (item.name
             .toString()
             .toLowerCase()
             .contains(_search.toLowerCase())) {

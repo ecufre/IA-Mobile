@@ -1,5 +1,6 @@
 import 'package:ia_mobile/src/commons/config.dart';
 import 'package:ia_mobile/src/models/class.dart';
+import 'package:ia_mobile/src/models/employee.dart';
 import 'package:ia_mobile/src/models/employeeType.dart';
 import 'package:ia_mobile/src/models/member.dart';
 import 'package:ia_mobile/src/models/passes_type.dart';
@@ -64,6 +65,32 @@ class ApiModule {
     }
   }
 
+  // GET
+  getEmployees() async {
+    String path = 'empleados';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    var response = await apiResponse.getJson(uri);
+    var jsonResult = json.decode(response.body);
+    if (jsonResult['successful']) {
+      return Employee().listFromJson(jsonResult['content']);
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // GET
+  getMembers() async {
+    String path = 'socios';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    var response = await apiResponse.getJson(uri);
+    var jsonResult = json.decode(response.body);
+    if (jsonResult['successful']) {
+      return Member().listFromJson(jsonResult['content']);
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
   // POST
   createMember(String name, String lastName, String dni, String email,
       String sex, DateTime birthDate) async {
@@ -86,6 +113,42 @@ class ApiModule {
     var jsonResult = json.decode(utf8.decode(response.bodyBytes));
     if (jsonResult['successful']) {
       return Member.fromJson(jsonResult['content']);
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // POST
+  createEmployee(
+      String name,
+      String lastName,
+      String dni,
+      String email,
+      String sex,
+      DateTime birthDate,
+      double salaryPerHour,
+      EmployeeType employeeType) async {
+    String path = 'socios';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+    };
+    Map<String, dynamic> body = {
+      "nombre": name,
+      "apellido": lastName,
+      "dni": dni,
+      "email": email,
+      "sexo": sex,
+      "fechaNacimiento": birthDate.toIso8601String(),
+      "fechaAlta": DateTime.now().toIso8601String(),
+      "sueldoBasicoCostoHora": salaryPerHour,
+      "tipoEmpleado": employeeType.toJson()
+    };
+
+    var response = await apiResponse.postJson(uri, header, body);
+    var jsonResult = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResult['successful']) {
+      return Employee.fromJson(jsonResult['content']);
     } else {
       throw Exception(jsonResult['message']);
     }

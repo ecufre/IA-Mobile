@@ -83,6 +83,6 @@ class SuccessfulPopup extends StatelessWidget {
 
   _back() {
     if (this.function != null) this.function();
-    Navigator.pop(context, false);
+    Navigator.pop(context, true);
   }
 }

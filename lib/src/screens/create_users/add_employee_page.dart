@@ -13,6 +13,7 @@ import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/custom_text_field.dart';
+import 'package:ia_mobile/src/widgets/successful_popup.dart';
 import 'package:provider/provider.dart';
 
 class AddEmployeePage extends StatefulWidget {
@@ -889,21 +890,39 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   }
 
   _createAction() {
+    setState(() {
+      _isLoading = true;
+    });
+    ApiModule()
+        .createEmployee(
+            _name,
+            _lastName,
+            _dni,
+            _email,
+            _sex,
+            DateTime.now(),
+            _monthWorkState
+                ? double.parse(_salary)
+                : double.parse(_amountPerHour),
+            _employeeType)
+        .then((result) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showPopup("Se creó el empleado ${result.name} ${result.lastName}");
+    });
+  }
+
+  void _showPopup(String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) =>
+          SuccessfulPopup(message: message, context: context, function: _back),
+    );
+  }
+
+  _back() {
     Navigator.pop(context);
-
-    // showDialog(
-    //   barrierDismissible: false,
-    //   context: context,
-    //   builder: (BuildContext context) => LoadingPopup(
-    //     future: () async {
-    //       //var result = await ClientBranchModule().createBranchDasa();
-    //       //return result;
-    //     },
-    //     successFunction: () => {},
-    //     failFunction: () => {},
-    //   ),
-    // ).then((result) {
-
-    // });
   }
 }

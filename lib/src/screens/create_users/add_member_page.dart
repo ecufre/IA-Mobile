@@ -789,31 +789,18 @@ class _AddMemberPageState extends State<AddMemberPage> {
       });
       _showPopup("Se creó el socio ${result.name} ${result.lastName}");
     });
-
-    // showDialog(
-    //   barrierDismissible: false,
-    //   context: context,
-    //   builder: (BuildContext context) => LoadingPopup(
-    //     future: () async {
-    //       var result = await ApiModule().createMember(
-    //           _name, _lastName, _dni, _email, _sex, DateTime.now());
-    //       return result;
-    //     },
-    //     successFunction: () => {},
-    //     failFunction: () => {},
-    //   ),
-    // ).then((result) {
-    //
-    // });
   }
 
-  void _showPopup(String message) {
-    showDialog(
+  void _showPopup(String message) async {
+    var result = await showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) =>
-          SuccessfulPopup(message: message, context: context, function: _back),
+          SuccessfulPopup(message: message, context: context),
     );
+    if (result) {
+      GeneralNavigator(context, BillSuscriptionPage()).navigate();
+    }
   }
 
   _back() {
