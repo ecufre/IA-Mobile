@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ia_mobile/src/commons/enums/ConnectivityStatus.dart';
-import 'package:ia_mobile/src/commons/enums/formMember.dart';
+import 'package:ia_mobile/src/commons/enums/formEmployee.dart';
 import 'package:ia_mobile/src/commons/general_regex.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/error_case.dart';
 import 'package:ia_mobile/src/helpers/validator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
-import 'package:ia_mobile/src/models/class.dart';
 import 'package:ia_mobile/src/models/employeeType.dart';
 import 'package:ia_mobile/src/providers/connectivity_service.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
@@ -23,23 +23,18 @@ class AddEmployeePage extends StatefulWidget {
 
 class _AddEmployeePageState extends State<AddEmployeePage> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  FormMember _formType = FormMember.pageOne;
+  FormEmployee _formType = FormEmployee.pageOne;
   Validator validator = Validator();
   List<String> _sexList = ["Masculino", "Femenino"];
   List<EmployeeType> _employeeTypeList = List();
-  List<Class> _listClasses = List();
-  List<bool> _listBoolClasses = List();
   List<bool> _noErrors = [];
   String _name;
   String _lastName;
   String _email;
   String _sex;
   String _dni;
-  String _amountPerHour;
   String _salary;
   EmployeeType _employeeType;
-  bool _monthWorkState = false;
-  bool _workPerHourState = false;
   bool _isLoading = true;
 
   TextEditingController _nameController = TextEditingController();
@@ -84,20 +79,8 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
 
   @override
   void initState() {
-    _getClasses();
+    _getEmployeeTypes();
     super.initState();
-  }
-
-  _getClasses() {
-    ApiModule().getClasses().then((result) {
-      setState(() {
-        _listClasses = result;
-        _listClasses.forEach((item) {
-          _listBoolClasses.add(false);
-        });
-      });
-      _getEmployeeTypes();
-    });
   }
 
   _getEmployeeTypes() {
@@ -149,11 +132,11 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
 
   Widget _pageWidget() {
     switch (_formType) {
-      case FormMember.pageOne:
+      case FormEmployee.pageOne:
         return _pageOne();
-      case FormMember.pageTwo:
+      case FormEmployee.pageTwo:
         return _pageTwo();
-      case FormMember.Detail:
+      case FormEmployee.Detail:
         return _pageDetail();
     }
     return null;
@@ -254,15 +237,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
       child: Column(
         children: <Widget>[
           _builtEmployeeType(),
-          _builtWorkTimeMonth(),
-          _monthWorkState ? _builtSalary() : SizedBox(),
-          _builtWorkTimeHour(),
-          _workPerHourState ? _builtAmountPerHour() : SizedBox(),
-          (_employeeType != null) &&
-                  (_employeeType.description.toLowerCase() ==
-                      LocaleSingleton.strings.professor.toLowerCase())
-              ? _builtClasses()
-              : SizedBox(),
+          _employeeType != null ? _builtSalary() : SizedBox(),
         ],
       ),
     );
@@ -559,30 +534,6 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     );
   }
 
-  Widget _builtWorkTimeMonth() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 17.0),
-      child: Card(
-        child: CheckboxListTile(
-          title: Text(
-            LocaleSingleton.strings.monthWork,
-            style: TextStyle(
-              fontSize: 17.0,
-              fontFamily: 'WorkSans Regular',
-            ),
-          ),
-          value: _monthWorkState,
-          onChanged: (value) {
-            setState(() {
-              _workPerHourState = false;
-              _monthWorkState = value;
-            });
-          },
-        ),
-      ),
-    );
-  }
-
   Widget _builtSalary() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -600,7 +551,10 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
         },
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.salary.toUpperCase(),
+          labelText: _employeeType.description.toLowerCase() ==
+                  LocaleSingleton.strings.externalProfessor.toLowerCase()
+              ? LocaleSingleton.strings.amoutPerHour.toUpperCase()
+              : LocaleSingleton.strings.salary.toUpperCase(),
           labelStyle: TextStyle(
             fontFamily: 'WorkSans Regular',
             fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
@@ -623,106 +577,6 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     );
   }
 
-  Widget _builtWorkTimeHour() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 17.0),
-      child: Card(
-        child: CheckboxListTile(
-          title: Text(
-            LocaleSingleton.strings.workPerHour,
-            style: TextStyle(
-              fontSize: 17.0,
-              fontFamily: 'WorkSans Regular',
-            ),
-          ),
-          value: _workPerHourState,
-          onChanged: (value) {
-            setState(() {
-              _monthWorkState = false;
-              _workPerHourState = value;
-            });
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _builtAmountPerHour() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: CustomTextFormField(
-        controller: _amountPerHourController,
-        focusNode: textAmountPerHourFocusNode,
-        key: Key('amountPerHour'),
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Regular',
-          fontSize: 15.0,
-        ),
-        onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.amoutPerHour.toUpperCase(),
-          labelStyle: TextStyle(
-            fontFamily: 'WorkSans Regular',
-            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
-            color: Colors.black,
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Ui.primaryColor),
-          ),
-        ),
-        autocorrect: false,
-        onSaved: (val) => _amountPerHour = val,
-        validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.amoutPerHourErrro : null,
-        textCapitalization: TextCapitalization.sentences,
-        noErrorsCallback: (bool val) => _confirmErrors(val),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(75),
-        ],
-      ),
-    );
-  }
-
-  Widget _builtClasses() {
-    return Column(
-      children: <Widget>[
-        Text(
-          LocaleSingleton.strings.classes,
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'WorkSans Regular',
-            fontSize: 15.0,
-          ),
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          addRepaintBoundaries: true,
-          itemCount: _listClasses.length,
-          physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return CheckboxListTile(
-              title: Text(
-                _listClasses[index].name,
-                style: TextStyle(
-                  fontFamily: 'WorkSans Regular',
-                  fontSize: 15.0,
-                ),
-              ),
-              value: _listBoolClasses[index],
-              onChanged: (value) {
-                setState(() => _listBoolClasses[index] = value);
-              },
-            );
-          },
-        ),
-      ],
-    );
-  }
-
   Widget _titleDetails(String text) {
     return Text(
       text,
@@ -737,6 +591,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
 
   Widget _personalDataDetails() {
     return Card(
+      elevation: 3.0,
       child: Column(
         children: <Widget>[
           _detail(LocaleSingleton.strings.name, _name),
@@ -755,16 +610,17 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
 
   Widget _employeeTypeDetails() {
     return Card(
+      elevation: 3.0,
       child: Column(
         children: <Widget>[
           _detail(
               LocaleSingleton.strings.employeeType, _employeeType.description),
           Divider(),
           _detail(
-              _monthWorkState
-                  ? LocaleSingleton.strings.monthWork
-                  : LocaleSingleton.strings.amoutPerHour,
-              _monthWorkState ? _salary : _amountPerHour),
+              _employeeType.id == 3
+                  ? LocaleSingleton.strings.amoutPerHour
+                  : LocaleSingleton.strings.monthWork,
+              _salary),
           Divider(),
         ],
       ),
@@ -807,7 +663,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     _resetTextFocus();
     try {
       setState(() {
-        _formType = FormMember.pageOne;
+        _formType = FormEmployee.pageOne;
         _nameController.text = _name;
         _lastNameController.text = _lastName;
         _dniController.text = _dni;
@@ -825,8 +681,8 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
       form.reset();
       try {
         setState(() {
-          _formType = FormMember.pageTwo;
-          _amountPerHourController.text = _amountPerHour;
+          _formType = FormEmployee.pageTwo;
+          _salaryController.text = _salary;
         });
       } catch (e) {
         print(e.toString());
@@ -841,7 +697,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
       form.reset();
       try {
         setState(() {
-          _formType = FormMember.Detail;
+          _formType = FormEmployee.Detail;
         });
       } catch (e) {
         print(e.toString());
@@ -894,22 +750,15 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
       _isLoading = true;
     });
     ApiModule()
-        .createEmployee(
-            _name,
-            _lastName,
-            _dni,
-            _email,
-            _sex,
-            DateTime.now(),
-            _monthWorkState
-                ? double.parse(_salary)
-                : double.parse(_amountPerHour),
-            _employeeType)
+        .createEmployee(_name, _lastName, _dni, _email, _sex, DateTime.now(),
+            double.parse(_salary), _employeeType)
         .then((result) {
       setState(() {
         _isLoading = false;
       });
       _showPopup("Se creó el empleado ${result.name} ${result.lastName}");
+    }).catchError((error) {
+      errorCase(error.message, context);
     });
   }
 

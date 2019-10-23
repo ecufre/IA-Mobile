@@ -12,6 +12,7 @@ Employee _$EmployeeFromJson(Map<String, dynamic> json) {
       employeeType: json['tipoEmpleado'] == null
           ? null
           : EmployeeType.fromJson(json['tipoEmpleado'] as Map<String, dynamic>))
+    ..id = json['id'] as int
     ..name = json['nombre'] as String
     ..lastName = json['apellido'] as String
     ..dni = json['dni'] as String
@@ -26,6 +27,7 @@ Employee _$EmployeeFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$EmployeeToJson(Employee instance) => <String, dynamic>{
+      'id': instance.id,
       'nombre': instance.name,
       'apellido': instance.lastName,
       'dni': instance.dni,

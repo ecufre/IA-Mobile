@@ -1,4 +1,5 @@
 import 'package:ia_mobile/src/commons/config.dart';
+import 'package:ia_mobile/src/models/bill.dart';
 import 'package:ia_mobile/src/models/class.dart';
 import 'package:ia_mobile/src/models/employee.dart';
 import 'package:ia_mobile/src/models/employeeType.dart';
@@ -128,27 +129,50 @@ class ApiModule {
       DateTime birthDate,
       double salaryPerHour,
       EmployeeType employeeType) async {
-    String path = 'socios';
+    String path = 'empleados';
     var uri = new Uri.http(baseUrl, modulePath + path);
     Map<String, String> header = {
       'Content-Type': 'application/json',
     };
     Map<String, dynamic> body = {
-      "nombre": name,
-      "apellido": lastName,
-      "dni": dni,
-      "email": email,
-      "sexo": sex,
-      "fechaNacimiento": birthDate.toIso8601String(),
-      "fechaAlta": DateTime.now().toIso8601String(),
+      "persona": {
+        "nombre": name,
+        "apellido": lastName,
+        "dni": dni,
+        "email": email,
+        "sexo": "Masculino",
+        "fechaNacimiento": birthDate.toIso8601String(),
+        "fechaAlta": DateTime.now().toIso8601String()
+      },
+      "idTipoEmpleado": employeeType.id,
       "sueldoBasicoCostoHora": salaryPerHour,
-      "tipoEmpleado": employeeType.toJson()
     };
 
     var response = await apiResponse.postJson(uri, header, body);
     var jsonResult = json.decode(utf8.decode(response.bodyBytes));
     if (jsonResult['successful']) {
       return Employee.fromJson(jsonResult['content']);
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // POST
+  createBill(
+    int idPeople,
+    int idPass,
+  ) async {
+    String path = 'pases';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+    };
+    Map<String, dynamic> body = {"idPersona": idPeople, "idPase": idPass};
+
+    var response = await apiResponse.postJson(uri, header, body);
+    var jsonResult = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResult['successful']) {
+      return Bill.fromJson(jsonResult['content']);
     } else {
       throw Exception(jsonResult['message']);
     }

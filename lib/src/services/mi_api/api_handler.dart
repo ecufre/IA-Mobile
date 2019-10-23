@@ -41,17 +41,14 @@ class ApiHandler {
     } else {
       var jsonResult = json.decode(utf8.decode(response.bodyBytes));
       errorMessage = _parseErrorMessage(jsonResult);
-      if (errorMessage == 'Invalid refresh token') {
-        errorMessage = LocaleSingleton.strings.sectionError;
-      }
     }
     throw Exception(errorMessage);
   }
 
   String _parseErrorMessage(var jsonResult) {
     if (jsonResult != '') {
-      if (jsonResult['Message'] != null) {
-        return jsonResult['Message'];
+      if (jsonResult['message'] != null) {
+        return jsonResult['message'];
       } else {
         return jsonResult;
       }

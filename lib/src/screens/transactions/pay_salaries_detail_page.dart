@@ -64,6 +64,7 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
 
   Widget _builtHolidays() {
     return Card(
+      elevation: 3.0,
       child: CheckboxListTile(
         title: Text(
           LocaleSingleton.strings.holidays,
@@ -86,6 +87,7 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
   Widget _addHolidays() {
     return _holidayState
         ? Card(
+            elevation: 3.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
@@ -159,6 +161,7 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
 
   Widget _builtIllness() {
     return Card(
+      elevation: 3.0,
       child: CheckboxListTile(
         title: Text(
           LocaleSingleton.strings.illness,
@@ -181,6 +184,7 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
   Widget _addIllness() {
     return _illnessState
         ? Card(
+            elevation: 3.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
@@ -254,6 +258,7 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
 
   Widget _builtStudyDay() {
     return Card(
+      elevation: 3.0,
       child: CheckboxListTile(
         title: Text(
           LocaleSingleton.strings.studyDay,
@@ -276,6 +281,7 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
   Widget _addStudyDay() {
     return _studyDayState
         ? Card(
+            elevation: 3.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(

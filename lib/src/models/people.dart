@@ -3,6 +3,8 @@ part 'people.g.dart';
 
 @JsonSerializable()
 class People {
+  @JsonKey(name: 'id')
+  int id;
   @JsonKey(name: 'nombre')
   String name;
   @JsonKey(name: 'apellido')

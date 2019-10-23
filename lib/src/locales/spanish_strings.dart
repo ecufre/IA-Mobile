@@ -65,5 +65,6 @@ class SpanishStrings extends Strings {
     super.salaryError = 'Debe ingresar un sueldo';
     super.professor = 'Profesor';
     super.classes = 'Clases';
+    super.externalProfessor = 'Profesor Externo';
   }
 }

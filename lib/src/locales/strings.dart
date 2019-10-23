@@ -63,4 +63,5 @@ class Strings {
   String salaryError;
   String professor;
   String classes;
+  String externalProfessor;
 }

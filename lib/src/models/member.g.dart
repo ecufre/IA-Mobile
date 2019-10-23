@@ -14,6 +14,7 @@ Member _$MemberFromJson(Map<String, dynamic> json) {
       authorizedUpTo: json['habilitadoHasta'] == null
           ? null
           : DateTime.parse(json['habilitadoHasta'] as String))
+    ..id = json['id'] as int
     ..name = json['nombre'] as String
     ..lastName = json['apellido'] as String
     ..dni = json['dni'] as String
@@ -28,6 +29,7 @@ Member _$MemberFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$MemberToJson(Member instance) => <String, dynamic>{
+      'id': instance.id,
       'nombre': instance.name,
       'apellido': instance.lastName,
       'dni': instance.dni,

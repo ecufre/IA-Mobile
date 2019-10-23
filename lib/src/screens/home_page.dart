@@ -42,7 +42,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _getMembers();
-
     super.initState();
   }
 
@@ -138,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                     leading: CircleAvatar(
                       radius: 30.0,
                       backgroundImage:
-                          AssetImage("assets/images/anonymous_user.png"),
+                          AssetImage("assets/images/the_rock_image.png"),
                     ),
                     title: Text(
                       _listFilterMembers[index].name,
@@ -152,8 +151,11 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            onTap: () =>
-                GeneralNavigator(context, DetailMemeberPage()).navigate(),
+            onTap: () => GeneralNavigator(
+                context,
+                DetailMemeberPage(
+                  member: _listFilterMembers[index],
+                )).navigate(),
           );
         },
       ),

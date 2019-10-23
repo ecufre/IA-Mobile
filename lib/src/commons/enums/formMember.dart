@@ -1,1 +1,1 @@
-enum FormMember { pageOne, pageTwo, Detail }
+enum FormMember { pageOne, Detail }

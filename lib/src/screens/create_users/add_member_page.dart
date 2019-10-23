@@ -4,6 +4,7 @@ import 'package:ia_mobile/src/commons/enums/ConnectivityStatus.dart';
 import 'package:ia_mobile/src/commons/enums/formMember.dart';
 import 'package:ia_mobile/src/commons/general_regex.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/error_case.dart';
 import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/helpers/validator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
@@ -14,7 +15,6 @@ import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/custom_text_field.dart';
-import 'package:ia_mobile/src/widgets/loading_popup.dart';
 import 'package:ia_mobile/src/widgets/successful_popup.dart';
 import 'package:provider/provider.dart';
 
@@ -34,9 +34,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
   String _email;
   String _dni;
   String _sex;
-  String _doctor;
-  String _date;
-  String _doctorPhone;
   bool _isLoading = false;
 
   TextEditingController _nameController = TextEditingController();
@@ -125,8 +122,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
     switch (_formType) {
       case FormMember.pageOne:
         return _pageOne();
-      case FormMember.pageTwo:
-        return _pageTwo();
       case FormMember.Detail:
         return _pageDetail();
     }
@@ -143,7 +138,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
                 const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
             child: CustomRaisedButton(
               text: LocaleSingleton.strings.carryOn.toUpperCase(),
-              function: () => _moveToPageTwo(),
+              function: () => _moveToPageDetail(),
               context: context,
               buttonColor: Ui.primaryColor,
               textColor: Colors.white,
@@ -153,25 +148,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
             ),
           ),
         ]);
-  }
-
-  Widget _pageTwo() {
-    return Column(children: <Widget>[
-      _pageTwoWidgets(),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-        child: CustomRaisedButton(
-          text: LocaleSingleton.strings.carryOn.toUpperCase(),
-          function: () => _moveToPageDetail(),
-          context: context,
-          buttonColor: Ui.primaryColor,
-          textColor: Colors.white,
-          fontSize: 17.5,
-          fontFamily: 'WorkSans Bold',
-          circularRadius: 3.5,
-        ),
-      )
-    ]);
   }
 
   Widget _pageDetail() {
@@ -224,20 +200,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
     );
   }
 
-  Widget _pageTwoWidgets() {
-    return Form(
-      key: _formkey,
-      child: Column(
-        children: <Widget>[
-          _builtTitleTwo(),
-          _builtDoctor(),
-          _builtDoctorPhone(),
-          _builtDate(),
-        ],
-      ),
-    );
-  }
-
   Widget _pageDetailWidgets() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -245,9 +207,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
         children: <Widget>[
           _titleDetails(LocaleSingleton.strings.personalData),
           _personalDataDetails(),
-          SizedBox(height: 10.0),
-          _titleDetails(LocaleSingleton.strings.medicalData),
-          _medicalDataDetails(),
         ],
       ),
     );
@@ -483,138 +442,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
     );
   }
 
-  Widget _builtTitleTwo() {
-    return Text(
-      LocaleSingleton.strings.medicalData,
-      style: TextStyle(
-        color: Colors.black,
-        fontFamily: 'WorkSans Bold',
-        fontSize: 22.0,
-      ),
-      textAlign: TextAlign.center,
-    );
-  }
-
-  Widget _builtDoctor() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: CustomTextFormField(
-        controller: _doctorController,
-        focusNode: textDoctorFocusNode,
-        key: Key('doctor'),
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Regular',
-          fontSize: 15.0,
-        ),
-        onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(textDoctorPhoneFocusNode);
-        },
-        keyboardType: TextInputType.text,
-        decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.doctor.toUpperCase(),
-          labelStyle: TextStyle(
-            fontFamily: 'WorkSans Regular',
-            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
-            color: Colors.black,
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Ui.primaryColor),
-          ),
-        ),
-        autocorrect: false,
-        onSaved: (val) => _doctor = val,
-        validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.doctorError : null,
-        textCapitalization: TextCapitalization.sentences,
-        noErrorsCallback: (bool val) => _confirmErrors(val),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(75),
-        ],
-      ),
-    );
-  }
-
-  Widget _builtDoctorPhone() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: CustomTextFormField(
-        controller: _doctorPhoneController,
-        focusNode: textDoctorPhoneFocusNode,
-        key: Key('doctorPhone'),
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Regular',
-          fontSize: 15.0,
-        ),
-        onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(textDateFocusNode);
-        },
-        keyboardType: TextInputType.text,
-        decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.doctorPhone.toUpperCase(),
-          labelStyle: TextStyle(
-            fontFamily: 'WorkSans Regular',
-            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
-            color: Colors.black,
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Ui.primaryColor),
-          ),
-        ),
-        autocorrect: false,
-        onSaved: (val) => _doctorPhone = val,
-        validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.doctorPhoneError : null,
-        textCapitalization: TextCapitalization.sentences,
-        noErrorsCallback: (bool val) => _confirmErrors(val),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(75),
-        ],
-      ),
-    );
-  }
-
-  Widget _builtDate() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: CustomTextFormField(
-        controller: _dateController,
-        focusNode: textDateFocusNode,
-        key: Key('date'),
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Regular',
-          fontSize: 15.0,
-        ),
-        onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.date.toUpperCase(),
-          labelStyle: TextStyle(
-            fontFamily: 'WorkSans Regular',
-            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
-            color: Colors.black,
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Ui.primaryColor),
-          ),
-        ),
-        autocorrect: false,
-        onSaved: (val) => _date = val,
-        validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.dateError : null,
-        textCapitalization: TextCapitalization.sentences,
-        noErrorsCallback: (bool val) => _confirmErrors(val),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(75),
-        ],
-      ),
-    );
-  }
-
   Widget _titleDetails(String text) {
     return Text(
       text,
@@ -629,6 +456,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
 
   Widget _personalDataDetails() {
     return Card(
+      elevation: 3.0,
       child: Column(
         children: <Widget>[
           _detail(LocaleSingleton.strings.name, _name),
@@ -640,20 +468,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
           _detail(LocaleSingleton.strings.sex, _sex),
           Divider(),
           _detail(LocaleSingleton.strings.email, _email),
-        ],
-      ),
-    );
-  }
-
-  Widget _medicalDataDetails() {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          _detail(LocaleSingleton.strings.doctor, _doctor),
-          Divider(),
-          _detail(LocaleSingleton.strings.doctorPhone, _doctorPhone),
-          Divider(),
-          _detail(LocaleSingleton.strings.date, _date),
         ],
       ),
     );
@@ -687,10 +501,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
     return _sex != null;
   }
 
-  _pageTwoWidgetValidation() {
-    return true;
-  }
-
   _moveToPageOne() {
     _resetTextFocus();
     try {
@@ -706,26 +516,10 @@ class _AddMemberPageState extends State<AddMemberPage> {
     }
   }
 
-  _moveToPageTwo() {
-    _resetTextFocus();
-    final FormState form = _formkey.currentState;
-    if (_validateAndSave(_pageOneWidgetValidation)) {
-      form.reset();
-      try {
-        setState(() {
-          _formType = FormMember.pageTwo;
-          _dateController.text = _date;
-        });
-      } catch (e) {
-        print(e.toString());
-      }
-    }
-  }
-
   _moveToPageDetail() {
     _resetTextFocus();
     final FormState form = _formkey.currentState;
-    if (_validateAndSave(_pageTwoWidgetValidation)) {
+    if (_validateAndSave(_pageOneWidgetValidation)) {
       form.reset();
       try {
         setState(() {
@@ -787,11 +581,13 @@ class _AddMemberPageState extends State<AddMemberPage> {
       setState(() {
         _isLoading = false;
       });
-      _showPopup("Se creó el socio ${result.name} ${result.lastName}");
+      _showPopup("Se creó el socio ${result.name} ${result.lastName}", result);
+    }).catchError((error) {
+      errorCase(error.message, context);
     });
   }
 
-  void _showPopup(String message) async {
+  void _showPopup(String message, Member member) async {
     var result = await showDialog(
       barrierDismissible: false,
       context: context,
@@ -799,11 +595,12 @@ class _AddMemberPageState extends State<AddMemberPage> {
           SuccessfulPopup(message: message, context: context),
     );
     if (result) {
-      GeneralNavigator(context, BillSuscriptionPage()).navigate();
+      Navigator.pop(context);
+      GeneralNavigator(
+          context,
+          BillSuscriptionPage(
+            member: member,
+          )).navigate();
     }
-  }
-
-  _back() {
-    Navigator.pop(context);
   }
 }

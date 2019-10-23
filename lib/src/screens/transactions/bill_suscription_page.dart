@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/helpers/error_case.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/models/member.dart';
 import 'package:ia_mobile/src/models/passes_type.dart';
 import 'package:ia_mobile/src/models/payment_method.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
+import 'package:ia_mobile/src/widgets/successful_popup.dart';
 
 class BillSuscriptionPage extends StatefulWidget {
+  BillSuscriptionPage({@required this.member});
+  final Member member;
   @override
   _BillSuscriptionPageState createState() => new _BillSuscriptionPageState();
 }
@@ -259,7 +263,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
       child: CustomRaisedButton(
         text: LocaleSingleton.strings.billing.toUpperCase(),
         function: _passesType != null && _methodOfPayment != null
-            ? () => Navigator.pop(context)
+            ? () => _submit()
             : null,
         context: context,
         buttonColor: Ui.primaryColor,
@@ -268,6 +272,29 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
         fontFamily: 'WorkSans Bold',
         circularRadius: 3.5,
       ),
+    );
+  }
+
+  _submit() {
+    setState(() => _isLoading = true);
+    ApiModule().createBill(widget.member.id, _passesType.id).then((result) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showPopup(
+          "Se creó la factura ${result.id} con monto de \$${result.amount}");
+    }).catchError((error) {
+      errorCase(error.message, context);
+      Navigator.pop(context);
+    });
+  }
+
+  void _showPopup(String message) async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) =>
+          SuccessfulPopup(message: message, context: context),
     );
   }
 }
