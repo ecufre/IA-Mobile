@@ -18,7 +18,8 @@ People _$PeopleFromJson(Map<String, dynamic> json) {
           : DateTime.parse(json['fechaNacimiento'] as String),
       dateAdded: json['fechaAlta'] == null
           ? null
-          : DateTime.parse(json['fechaAlta'] as String))
+          : DateTime.parse(json['fechaAlta'] as String),
+      rols: (json['roles'] as List)?.map((e) => e as String)?.toList())
     ..id = json['id'] as int;
 }
 
@@ -30,5 +31,6 @@ Map<String, dynamic> _$PeopleToJson(People instance) => <String, dynamic>{
       'email': instance.email,
       'sexo': instance.sex,
       'fechaNacimiento': instance.birthDate?.toIso8601String(),
-      'fechaAlta': instance.dateAdded?.toIso8601String()
+      'fechaAlta': instance.dateAdded?.toIso8601String(),
+      'roles': instance.rols
     };

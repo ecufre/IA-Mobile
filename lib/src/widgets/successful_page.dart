@@ -4,6 +4,8 @@ import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 
 class SuccessfulPage extends StatefulWidget {
+  SuccessfulPage({this.message});
+  final String message;
   @override
   _SuccessfulPageState createState() => new _SuccessfulPageState();
 }
@@ -46,7 +48,7 @@ class _SuccessfulPageState extends State<SuccessfulPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: Text(
-        "Se realizó el pago",
+       widget.message,
         style: TextStyle(
           fontFamily: 'WorkSans Bold',
           fontSize: 20.0,

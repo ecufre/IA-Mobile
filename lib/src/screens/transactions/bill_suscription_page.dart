@@ -292,27 +292,38 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
       setState(() {
         _isLoading = false;
       });
-      _showPopup(
-          "Se creó la factura ${result.id} con monto de \$${result.amount}");
+      if (result is bool) {
+        if (result) {
+          _openConfirmPopup();
+        }
+      } else {
+        _showPopup(result);
+      }
     });
   }
 
-  void _showPopup(String message) async {
-    var result = await showDialog(
+  void _showPopup(String message) {
+    showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) => SuccessfulPopup(
         message: message,
         context: context,
+        function: _back,
       ),
     );
-    if (result) {
-      _openConfirmPopup();
-    }
+  }
+
+  _back() {
+    Navigator.pop(context);
   }
 
   _openConfirmPopup() {
     Navigator.pop(context);
-    GeneralNavigator(context, SuccessfulPage()).navigate();
+    GeneralNavigator(
+        context,
+        SuccessfulPage(
+          message: "Se realizó el pago",
+        )).navigate();
   }
 }

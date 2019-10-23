@@ -19,16 +19,18 @@ class People {
   DateTime birthDate;
   @JsonKey(name: 'fechaAlta')
   DateTime dateAdded;
+  @JsonKey(name: 'roles')
+  List<String> rols;
 
-  People({
-    this.name,
-    this.lastName,
-    this.dni,
-    this.email,
-    this.sex,
-    this.birthDate,
-    this.dateAdded,
-  });
+  People(
+      {this.name,
+      this.lastName,
+      this.dni,
+      this.email,
+      this.sex,
+      this.birthDate,
+      this.dateAdded,
+      this.rols});
 
   factory People.fromJson(Map<String, dynamic> json) => _$PeopleFromJson(json);
 

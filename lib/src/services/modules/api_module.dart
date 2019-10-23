@@ -94,8 +94,12 @@ class ApiModule {
 
   // GET
   getLiquidationEmployees(int month, int year) async {
-    String path = 'liquidacion?mes=$month&anio=$year';
-    var uri = new Uri.http(baseUrl, modulePath + path);
+    String path = 'liquidacion';
+    Map<String, String> _query = {
+      'mes': month.toString(),
+      'anio': year.toString(),
+    };
+    var uri = new Uri.http(baseUrl, modulePath + path, _query);
     var response = await apiResponse.getJson(uri);
     var jsonResult = json.decode(response.body);
     if (jsonResult['successful']) {
@@ -204,6 +208,32 @@ class ApiModule {
     Map<String, dynamic> body = {
       "idFactura": idBill,
       "idMedioDePago": idPaymentMethod
+    };
+
+    var response = await apiResponse.postJson(uri, header, body);
+    var jsonResult = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResult['successful']) {
+      return true;
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // POST
+  paySalary(
+    int idEmployee,
+    int month,
+    int year,
+  ) async {
+    String path = 'liquidacion';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+    };
+    Map<String, dynamic> body = {
+      "idEmpleado": idEmployee,
+      "mes": month,
+      "anio": year,
     };
 
     var response = await apiResponse.postJson(uri, header, body);
