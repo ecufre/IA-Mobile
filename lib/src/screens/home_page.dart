@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                           AssetImage("assets/icons/dumbbell_icon.png"),
                     ),
                     title: Text(
-                      _listFilterMembers[index].name,
+                      "${_listFilterMembers[index].name} ${_listFilterMembers[index].lastName}",
                       style: TextStyle(
                         fontFamily: 'WorkSans Regular',
                         fontSize: 15.0,

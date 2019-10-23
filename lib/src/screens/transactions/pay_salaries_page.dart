@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/error_case.dart';
 import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/models/employee.dart';
 import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
 import 'package:ia_mobile/src/screens/transactions/pay_salaries_detail_page.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
+import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 
 class PaySalariesPage extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class PaySalariesPage extends StatefulWidget {
 }
 
 class _PaySalariesPageState extends State<PaySalariesPage> {
+  bool _isLoading = false;
   List<String> _listMonths = [
     "Enero",
     "Febrero",
@@ -27,20 +30,20 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
     "Noviembre",
     "Diciembre",
   ];
-  List<String> _listYears = [
-    "2019",
-    "2018",
-    "2017",
-  ];
+  List<String> _listYears = ["2019", "2018", "2017"];
   List<Employee> _listEmployees = List();
   String _month;
   String _year;
 
   _searchEmployees(int month, int year) {
+    setState(() => _isLoading = true);
     ApiModule().getLiquidationEmployees(month, year).then((result) {
       setState(() {
+        _isLoading = false;
         _listEmployees = result;
       });
+    }).catchError((error) {
+      errorCase(error.message, context);
     });
   }
 
@@ -227,44 +230,53 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
 
   Widget _listUsers() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         SizedBox(height: 20.0),
-        ListView.builder(
-          shrinkWrap: true,
-          addRepaintBoundaries: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: _listEmployees.length,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30.0,
-                    backgroundImage:
-                        AssetImage("assets/icons/dumbbell_icon.png"),
-                  ),
-                  title: Text(
-                    _listEmployees[index].name,
-                    style: TextStyle(
-                      fontFamily: 'WorkSans Regular',
-                      fontSize: 15.0,
-                    ),
-                  ),
+        Center(
+          child: _isLoading
+              ? ColorLoaderPopup()
+              : ListView.builder(
+                  shrinkWrap: true,
+                  addRepaintBoundaries: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: _listEmployees.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage:
+                                AssetImage("assets/icons/dumbbell_icon.png"),
+                          ),
+                          title: Text(
+                            "${_listEmployees[index].name} ${_listEmployees[index].lastName}",
+                            style: TextStyle(
+                              fontFamily: 'WorkSans Regular',
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      onTap: () async {
+                        var result = await GeneralNavigator(
+                          context,
+                          PaySalariesDetailPage(
+                            employee: _listEmployees[index],
+                            month: _getMonthCode(_month),
+                            year: int.parse(_year),
+                          ),
+                        ).navigate();
+                        if (result) {
+                          _searchEmployees(
+                              _getMonthCode(_month), int.parse(_year));
+                        }
+                      },
+                    );
+                  },
                 ),
-              ),
-              onTap: () {
-                GeneralNavigator(
-                  context,
-                  PaySalariesDetailPage(
-                    employee: _listEmployees[index],
-                    month: _getMonthCode(_month),
-                    year: int.parse(_year),
-                  ),
-                ).navigate();
-              },
-            );
-          },
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/error_case.dart';
 import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/models/employee.dart';
@@ -466,6 +467,9 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
       } else {
         _showPopup(result);
       }
+    }).catchError((error) {
+      Navigator.pop(context);
+      errorCase(error.message, context);
     });
   }
 
@@ -482,11 +486,11 @@ class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
   }
 
   _back() {
-    Navigator.pop(context);
+    Navigator.pop(context, true);
   }
 
   _openConfirmPopup() {
-    Navigator.pop(context);
+    Navigator.pop(context, true);
     GeneralNavigator(
         context,
         SuccessfulPage(
