@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/helpers/error_case.dart';
+import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/models/member.dart';
 import 'package:ia_mobile/src/models/passes_type.dart';
@@ -8,6 +9,7 @@ import 'package:ia_mobile/src/models/payment_method.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
+import 'package:ia_mobile/src/widgets/successful_page.dart';
 import 'package:ia_mobile/src/widgets/successful_popup.dart';
 
 class BillSuscriptionPage extends StatefulWidget {
@@ -278,23 +280,39 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
   _submit() {
     setState(() => _isLoading = true);
     ApiModule().createBill(widget.member.id, _passesType.id).then((result) {
-      setState(() {
-        _isLoading = false;
-      });
-      _showPopup(
-          "Se creó la factura ${result.id} con monto de \$${result.amount}");
+      _payBill(result.id, _methodOfPayment.id);
     }).catchError((error) {
       errorCase(error.message, context);
       Navigator.pop(context);
     });
   }
 
+  _payBill(int idBill, int idPaymentMethod) {
+    ApiModule().payBill(idBill, idPaymentMethod).then((result) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showPopup(
+          "Se creó la factura ${result.id} con monto de \$${result.amount}");
+    });
+  }
+
   void _showPopup(String message) async {
-    showDialog(
+    var result = await showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (BuildContext context) =>
-          SuccessfulPopup(message: message, context: context),
+      builder: (BuildContext context) => SuccessfulPopup(
+        message: message,
+        context: context,
+      ),
     );
+    if (result) {
+      _openConfirmPopup();
+    }
+  }
+
+  _openConfirmPopup() {
+    Navigator.pop(context);
+    GeneralNavigator(context, SuccessfulPage()).navigate();
   }
 }

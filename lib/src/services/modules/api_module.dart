@@ -92,6 +92,19 @@ class ApiModule {
     }
   }
 
+  // GET
+  getLiquidationEmployees(int month, int year) async {
+    String path = 'liquidacion?mes=$month&anio=$year';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    var response = await apiResponse.getJson(uri);
+    var jsonResult = json.decode(response.body);
+    if (jsonResult['successful']) {
+      return Employee().listFromJson(jsonResult['content']);
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
   // POST
   createMember(String name, String lastName, String dni, String email,
       String sex, DateTime birthDate) async {
@@ -173,6 +186,30 @@ class ApiModule {
     var jsonResult = json.decode(utf8.decode(response.bodyBytes));
     if (jsonResult['successful']) {
       return Bill.fromJson(jsonResult['content']);
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // POST
+  payBill(
+    int idBill,
+    int idPaymentMethod,
+  ) async {
+    String path = 'movimientos';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+    };
+    Map<String, dynamic> body = {
+      "idFactura": idBill,
+      "idMedioDePago": idPaymentMethod
+    };
+
+    var response = await apiResponse.postJson(uri, header, body);
+    var jsonResult = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResult['successful']) {
+      return true;
     } else {
       throw Exception(jsonResult['message']);
     }

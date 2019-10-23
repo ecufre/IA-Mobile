@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                     leading: CircleAvatar(
                       radius: 30.0,
                       backgroundImage:
-                          AssetImage("assets/images/the_rock_image.png"),
+                          AssetImage("assets/icons/dumbbell_icon.png"),
                     ),
                     title: Text(
                       _listFilterMembers[index].name,
