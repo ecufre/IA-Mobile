@@ -210,7 +210,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Desde"),
+                        Text(LocaleSingleton.strings.since),
                         Text(DateFormat.yMd('es_AR')
                             .format(new DateTime.now())
                             .toString()),
@@ -233,7 +233,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Hasta"),
+                        Text(LocaleSingleton.strings.upTo),
                         Text(DateFormat.yMd('es_AR')
                             .format(_upToDate)
                             .toString())

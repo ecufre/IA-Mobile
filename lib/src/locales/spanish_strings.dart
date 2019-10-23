@@ -66,5 +66,7 @@ class SpanishStrings extends Strings {
     super.professor = 'Profesor';
     super.classes = 'Clases';
     super.externalProfessor = 'Profesor Externo';
+    super.upTo = 'Hasta';
+    super.since = 'Desde';
   }
 }

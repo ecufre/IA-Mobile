@@ -64,4 +64,6 @@ class Strings {
   String professor;
   String classes;
   String externalProfessor;
+  String upTo;
+  String since;
 }
