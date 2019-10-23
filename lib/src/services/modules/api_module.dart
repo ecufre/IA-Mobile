@@ -65,26 +65,27 @@ class ApiModule {
   }
 
   // POST
-  createMember(Member member) async {
-    String path = 'request/dasa';
+  createMember(String name, String lastName, String dni, String email,
+      String sex, DateTime birthDate) async {
+    String path = 'socios';
     var uri = new Uri.http(baseUrl, modulePath + path);
-    Map<String, dynamic> header = {
+    Map<String, String> header = {
       'Content-Type': 'application/json',
     };
     Map<String, dynamic> body = {
-      'nombre': member.name,
-      'apellido': member.lastName,
-      'dni': member.dni,
-      'email': member.email,
-      'sexo': member.sex,
-      'fechaNacimiento': member.birthDate,
-      'fechaAlta': DateTime.now(),
+      "nombre": name,
+      "apellido": lastName,
+      "dni": dni,
+      "email": email,
+      "sexo": sex,
+      "fechaNacimiento": birthDate.toIso8601String(),
+      "fechaAlta": DateTime.now().toIso8601String()
     };
 
     var response = await apiResponse.postJson(uri, header, body);
     var jsonResult = json.decode(utf8.decode(response.bodyBytes));
     if (jsonResult['successful']) {
-      return Member().listFromJson(jsonResult['content']);
+      return Member.fromJson(jsonResult['content']);
     } else {
       throw Exception(jsonResult['message']);
     }

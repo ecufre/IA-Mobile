@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'dart:convert';
 import 'package:ia_mobile/src/services/mi_api/api_handler.dart';
+import 'dart:async';
 
 class ApiResponse {
   ApiHandler apiHandler = ApiHandler();
@@ -23,7 +24,6 @@ class ApiResponse {
   ) async {
     var response =
         await http.post(uri, headers: header, body: json.encode(body));
-
     return _parseResponse(response);
   }
 

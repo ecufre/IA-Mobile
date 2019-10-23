@@ -10,7 +10,7 @@ People _$PeopleFromJson(Map<String, dynamic> json) {
   return People(
       name: json['nombre'] as String,
       lastName: json['apellido'] as String,
-      dni: json['dni'] as int,
+      dni: json['dni'] as String,
       email: json['email'] as String,
       sex: json['sexo'] as String,
       birthDate: json['fechaNacimiento'] == null

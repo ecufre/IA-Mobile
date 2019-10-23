@@ -14,7 +14,7 @@ Employee _$EmployeeFromJson(Map<String, dynamic> json) {
           : EmployeeType.fromJson(json['tipoEmpleado'] as Map<String, dynamic>))
     ..name = json['nombre'] as String
     ..lastName = json['apellido'] as String
-    ..dni = json['dni'] as int
+    ..dni = json['dni'] as String
     ..email = json['email'] as String
     ..sex = json['sexo'] as String
     ..birthDate = json['fechaNacimiento'] == null

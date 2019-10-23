@@ -8,7 +8,7 @@ class People {
   @JsonKey(name: 'apellido')
   String lastName;
   @JsonKey(name: 'dni')
-  int dni;
+  String dni;
   @JsonKey(name: 'email')
   String email;
   @JsonKey(name: 'sexo')
@@ -18,14 +18,16 @@ class People {
   @JsonKey(name: 'fechaAlta')
   DateTime dateAdded;
 
-  People(
-      {this.name,
-      this.lastName,
-      this.dni,
-      this.email,
-      this.sex,
-      this.birthDate,
-      this.dateAdded});
+  People({
+    this.name,
+    this.lastName,
+    this.dni,
+    this.email,
+    this.sex,
+    this.birthDate,
+    this.dateAdded,
+  });
+
   factory People.fromJson(Map<String, dynamic> json) => _$PeopleFromJson(json);
 
   Map<String, dynamic> toJson() => _$PeopleToJson(this);

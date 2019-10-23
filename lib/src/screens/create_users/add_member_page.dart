@@ -7,11 +7,15 @@ import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/helpers/validator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/models/member.dart';
 import 'package:ia_mobile/src/providers/connectivity_service.dart';
 import 'package:ia_mobile/src/screens/transactions/bill_suscription_page.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
+import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/custom_text_field.dart';
+import 'package:ia_mobile/src/widgets/loading_popup.dart';
+import 'package:ia_mobile/src/widgets/successful_popup.dart';
 import 'package:provider/provider.dart';
 
 class AddMemberPage extends StatefulWidget {
@@ -33,7 +37,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
   String _doctor;
   String _date;
   String _doctorPhone;
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
@@ -107,12 +111,14 @@ class _AddMemberPageState extends State<AddMemberPage> {
   }
 
   Widget _body() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: _pageWidget(),
-      ),
-    );
+    return _isLoading
+        ? ColorLoaderPopup()
+        : SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _pageWidget(),
+            ),
+          );
   }
 
   Widget _pageWidget() {
@@ -145,7 +151,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
               fontFamily: 'WorkSans Bold',
               circularRadius: 3.5,
             ),
-          )
+          ),
         ]);
   }
 
@@ -477,28 +483,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
     );
   }
 
-  // Widget _builtState() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-  //     child: CheckboxListTile(
-  //       title: Text(
-  //         _state
-  //             ? LocaleSingleton.strings.enable
-  //             : LocaleSingleton.strings.disable,
-  //         style: TextStyle(
-  //           fontFamily: 'WorkSans Regular',
-  //           fontSize: 15,
-  //           color: Colors.black,
-  //         ),
-  //       ),
-  //       value: _state,
-  //       onChanged: (value) {
-  //         setState(() => _state = value);
-  //       },
-  //     ),
-  //   );
-  // }
-
   Widget _builtTitleTwo() {
     return Text(
       LocaleSingleton.strings.medicalData,
@@ -794,21 +778,45 @@ class _AddMemberPageState extends State<AddMemberPage> {
   }
 
   _createAction() {
-    Navigator.pop(context);
-    GeneralNavigator(context, BillSuscriptionPage()).navigate();
+    setState(() {
+      _isLoading = true;
+    });
+    ApiModule()
+        .createMember(_name, _lastName, _dni, _email, _sex, DateTime.now())
+        .then((result) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showPopup("Se creó el socio ${result.name} ${result.lastName}");
+    });
+
     // showDialog(
     //   barrierDismissible: false,
     //   context: context,
     //   builder: (BuildContext context) => LoadingPopup(
     //     future: () async {
-    //       //var result = await ClientBranchModule().createBranchDasa();
-    //       //return result;
+    //       var result = await ApiModule().createMember(
+    //           _name, _lastName, _dni, _email, _sex, DateTime.now());
+    //       return result;
     //     },
     //     successFunction: () => {},
     //     failFunction: () => {},
     //   ),
     // ).then((result) {
-
+    //
     // });
+  }
+
+  void _showPopup(String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) =>
+          SuccessfulPopup(message: message, context: context, function: _back),
+    );
+  }
+
+  _back() {
+    Navigator.pop(context);
   }
 }
