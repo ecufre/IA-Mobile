@@ -76,4 +76,8 @@ class Strings {
   String cvvCodeError;
   String cardAdded;
   String arrivalsAndDepartures;
+  String cbu;
+  String cbuError;
+  String cuit;
+  String cuitError;
 }

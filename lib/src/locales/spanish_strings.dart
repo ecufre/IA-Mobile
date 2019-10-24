@@ -78,5 +78,9 @@ class SpanishStrings extends Strings {
     super.cvvCodeError = 'Debe ingresar un código de seguridad';
     super.cardAdded = 'Tarjeta Agregada';
     super.arrivalsAndDepartures = 'Ingresos/Salidas';
+    super.cbu = 'CBU';
+    super.cbuError = 'Debe ingresar un CBU';
+    super.cuit = 'Cuit';
+    super.cuitError = 'Debe ingresar un Cuit';
   }
 }
