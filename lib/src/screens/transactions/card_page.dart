@@ -385,7 +385,8 @@ class _CardPageState extends State<CardPage> {
   void _validateAndSubmit() async {
     if (_validateAndSave()) {
       try {
-        widget.function(_cardNumber, _expiryDate, _cvvCode, _dni);
+        //se agrega el 20 para completar el formato de año YYYY
+        widget.function(_cardNumber, "20" + _expiryDate, _cvvCode, _dni);
         _saveCard();
       } catch (e) {
         print(e.toString());
