@@ -66,4 +66,14 @@ class Strings {
   String externalProfessor;
   String upTo;
   String since;
+  String addCreditCard;
+  String addCard;
+  String cardNumber;
+  String cardNumberError;
+  String expiryDate;
+  String expiryDateError;
+  String cvvCode;
+  String cvvCodeError;
+  String cardAdded;
+  String arrivalsAndDepartures;
 }

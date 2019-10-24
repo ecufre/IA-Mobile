@@ -6,6 +6,7 @@ import 'package:ia_mobile/src/models/employeeType.dart';
 import 'package:ia_mobile/src/models/member.dart';
 import 'package:ia_mobile/src/models/passes_type.dart';
 import 'package:ia_mobile/src/models/payment_method.dart';
+import 'package:ia_mobile/src/models/people.dart';
 import 'package:ia_mobile/src/services/mi_api/api_response.dart';
 import 'dart:convert';
 
@@ -74,6 +75,19 @@ class ApiModule {
     var jsonResult = json.decode(response.body);
     if (jsonResult['successful']) {
       return Employee().listFromJson(jsonResult['content']);
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // GET
+  getPeople() async {
+    String path = 'personas';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    var response = await apiResponse.getJson(uri);
+    var jsonResult = json.decode(response.body);
+    if (jsonResult['successful']) {
+      return People().listFromJson(jsonResult['content']);
     } else {
       throw Exception(jsonResult['message']);
     }

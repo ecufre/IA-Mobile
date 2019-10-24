@@ -68,5 +68,15 @@ class SpanishStrings extends Strings {
     super.externalProfessor = 'Profesor Externo';
     super.upTo = 'Hasta';
     super.since = 'Desde';
+    super.addCreditCard = 'Agregar Tarjeta de Crédito';
+    super.addCard = 'Agregar Tarjeta';
+    super.cardNumber = 'Número de Tarjeta';
+    super.cardNumberError = 'Debe ingresar un número de tarjeta';
+    super.expiryDate = 'Fecha de Vencimiento';
+    super.expiryDateError = 'Debe ingresar una fecha de vencimiento';
+    super.cvvCode = 'Código de Seguridad';
+    super.cvvCodeError = 'Debe ingresar un código de seguridad';
+    super.cardAdded = 'Tarjeta Agregada';
+    super.arrivalsAndDepartures = 'Ingresos/Salidas';
   }
 }

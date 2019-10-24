@@ -6,6 +6,7 @@ import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/models/member.dart';
 import 'package:ia_mobile/src/models/passes_type.dart';
 import 'package:ia_mobile/src/models/payment_method.dart';
+import 'package:ia_mobile/src/screens/transactions/card_page.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
@@ -28,6 +29,9 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
   PassesType _passesType;
   PaymentMethod _methodOfPayment;
   DateTime _upToDate;
+  String _cardNumber;
+  String _expiryDate;
+  String _cvvCode;
 
   @override
   void initState() {
@@ -96,6 +100,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
               _suscriptionType(),
               _sinceAndUpToDetail(),
               _methodsOfPayment(),
+              _addCreditCardButton(),
               _button(),
             ],
           );
@@ -301,6 +306,92 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
         ),
       ),
     );
+  }
+
+  Widget _addCreditCardButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _cardNumber == null
+              ? Container(
+                  height: 115,
+                  width: 125,
+                  child: RaisedButton(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/icons/cards_icon.png",
+                            scale: 11.0,
+                          ),
+                          SizedBox(height: 5.0),
+                          Text(
+                            LocaleSingleton.strings.addCreditCard,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'WorkSans Bold',
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    onPressed: () => GeneralNavigator(
+                      context,
+                      CardPage(
+                        name: "${widget.member.name} ${widget.member.lastName}",
+                        function: (number, date, code) =>
+                            _addCard(number, date, code),
+                      ),
+                    ).navigate(),
+                    color: Ui.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(60.5),
+                      ),
+                    ),
+                  ),
+                )
+              : Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5.0),
+                    ),
+                    border: Border.all(color: Colors.black38),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset(
+                          "assets/icons/card_icon.png",
+                          scale: 11.0,
+                        ),
+                        Text(
+                          LocaleSingleton.strings.cardAdded,
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ))
+        ],
+      ),
+    );
+  }
+
+  _addCard(String number, String date, String code) {
+    setState(() {
+      _cardNumber = number;
+      _expiryDate = date;
+      _cvvCode = code;
+    });
   }
 
   Widget _button() {

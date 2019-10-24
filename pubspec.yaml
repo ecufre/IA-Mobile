@@ -16,6 +16,7 @@ dependencies:
   connectivity: ^0.4.4
   http: any
   json_annotation: ^2.0.0
+  flutter_credit_card: ^0.1.3
 
 dev_dependencies:
   flutter_test:

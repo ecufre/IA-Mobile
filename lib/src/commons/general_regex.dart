@@ -8,5 +8,5 @@ class GeneralRegex {
   static final RegExp regexWithoutSpace =
       RegExp(r"[a-zA-Z0-9.\-/@_*+ñíóúáéÑÍÓÚÁÉ,]");
   static final RegExp regexOnlyNumbers = RegExp(r"[0-9]");
-  static final RegExp regexLicensePlate = RegExp(r"[a-zA-Z0-9]");
+  static final RegExp expiryDate = RegExp(r"^[0-9\.\-\/]+$");
 }

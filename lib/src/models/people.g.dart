@@ -8,6 +8,7 @@ part of 'people.dart';
 
 People _$PeopleFromJson(Map<String, dynamic> json) {
   return People(
+      id: json['id'] as int,
       name: json['nombre'] as String,
       lastName: json['apellido'] as String,
       dni: json['dni'] as String,
@@ -19,8 +20,9 @@ People _$PeopleFromJson(Map<String, dynamic> json) {
       dateAdded: json['fechaAlta'] == null
           ? null
           : DateTime.parse(json['fechaAlta'] as String),
-      rols: (json['roles'] as List)?.map((e) => e as String)?.toList())
-    ..id = json['id'] as int;
+      rols: (json['roles'] as List)?.map((e) => e as String)?.toList(),
+      cbu: json['cbu'] as String,
+      cuit: json['cuit'] as String);
 }
 
 Map<String, dynamic> _$PeopleToJson(People instance) => <String, dynamic>{
@@ -32,5 +34,7 @@ Map<String, dynamic> _$PeopleToJson(People instance) => <String, dynamic>{
       'sexo': instance.sex,
       'fechaNacimiento': instance.birthDate?.toIso8601String(),
       'fechaAlta': instance.dateAdded?.toIso8601String(),
-      'roles': instance.rols
+      'roles': instance.rols,
+      'cbu': instance.cbu,
+      'cuit': instance.cuit
     };
