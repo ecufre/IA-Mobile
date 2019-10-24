@@ -87,6 +87,10 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
       ),
       actions: <Widget>[
         PopupMenuButton<String>(
+          icon: Icon(
+            Icons.filter_list,
+            color: Colors.white,
+          ),
           onSelected: (value) => _changeRol(value),
           itemBuilder: (BuildContext context) {
             return _listRols.map((String item) {

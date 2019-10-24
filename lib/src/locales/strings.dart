@@ -13,6 +13,7 @@ class Strings {
   String passwordError;
   String search;
   String add;
+  String liquidateSalaries;
   String paySalaries;
   String billSubscription;
   String addMember;
@@ -80,4 +81,6 @@ class Strings {
   String cbuError;
   String cuit;
   String cuitError;
+  String pay;
+  String employeesLiquidated;
 }

@@ -108,7 +108,7 @@ class ApiModule {
 
   // GET
   getLiquidationEmployees(int month, int year) async {
-    String path = 'liquidacion';
+    String path = 'liquidaciones';
     Map<String, String> _query = {
       'mes': month.toString(),
       'anio': year.toString(),
@@ -139,8 +139,8 @@ class ApiModule {
       "sexo": "Masculino",
       "fechaNacimiento": birthDate.toIso8601String(),
       "fechaAlta": DateTime.now().toIso8601String(),
-      "CBU": cbu,
-      "CUIT": cuit
+      "cbu": cbu,
+      "cuit": cuit
     };
 
     var response = await apiResponse.postJson(uri, header, body);
@@ -178,8 +178,8 @@ class ApiModule {
         "sexo": "Masculino",
         "fechaNacimiento": birthDate.toIso8601String(),
         "fechaAlta": DateTime.now().toIso8601String(),
-        "CBU": cbu,
-        "CUIT": cuit
+        "cbu": cbu,
+        "cuit": cuit
       },
       "idTipoEmpleado": employeeType.id,
       "sueldoBasicoCostoHora": salaryPerHour,
@@ -247,7 +247,7 @@ class ApiModule {
     int month,
     int year,
   ) async {
-    String path = 'liquidacion';
+    String path = 'liquidaciones';
     var uri = new Uri.http(baseUrl, modulePath + path);
     Map<String, String> header = {
       'Content-Type': 'application/json',
@@ -301,6 +301,27 @@ class ApiModule {
     Map<String, dynamic> body = {"idPersona": idPeople, "idRol": idRol};
 
     var response = await apiResponse.postJson(uri, header, body);
+    var jsonResult = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResult['successful']) {
+      return true;
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // PATCH
+  paySalaries(
+    int month,
+    int year,
+  ) async {
+    String path = 'liquidaciones';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+    };
+    Map<String, dynamic> body = {'mes': month, 'anio': year};
+
+    var response = await apiResponse.patchJson(uri, header, body);
     var jsonResult = json.decode(utf8.decode(response.bodyBytes));
     if (jsonResult['successful']) {
       return true;

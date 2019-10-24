@@ -38,6 +38,17 @@ class ApiResponse {
     return _parseResponse(response);
   }
 
+  Future<dynamic> patchJson(
+    Uri uri,
+    Map<String, dynamic> header,
+    Map<String, dynamic> body,
+  ) async {
+    var response =
+        await http.patch(uri, headers: header, body: json.encode(body));
+
+    return _parseResponse(response);
+  }
+
   _parseResponse(var response) {
     return apiHandler.handlerResponse(response);
   }

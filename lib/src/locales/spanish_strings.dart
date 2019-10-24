@@ -15,7 +15,7 @@ class SpanishStrings extends Strings {
     super.passwordError = 'Debe ingresar una contraseña';
     super.search = 'Buscar';
     super.add = 'Agregar';
-    super.paySalaries = 'Liquidar Sueldos';
+    super.paySalaries = 'Pagar Sueldos';
     super.billSubscription = 'Facturar Abono';
     super.addMember = 'Agregar Socio';
     super.email = 'Email';
@@ -82,5 +82,8 @@ class SpanishStrings extends Strings {
     super.cbuError = 'Debe ingresar un CBU';
     super.cuit = 'Cuit';
     super.cuitError = 'Debe ingresar un Cuit';
+    super.liquidateSalaries = 'Liquidar Sueldos';
+    super.pay = 'Pagar';
+    super.employeesLiquidated = 'Empleados Liquidados';
   }
 }

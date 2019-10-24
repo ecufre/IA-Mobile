@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/helpers/error_case.dart';
+import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/models/employee.dart';
+import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
+import 'package:ia_mobile/src/screens/transactions/liquidate_salaries_detail_page.dart';
+import 'package:ia_mobile/src/screens/transactions/pay_salaries_page.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
-import 'package:ia_mobile/src/widgets/successful_popup.dart';
 
-class PaySalariesPage extends StatefulWidget {
+class LiquidateSalariesPage extends StatefulWidget {
   @override
-  _PaySalariesPageState createState() => new _PaySalariesPageState();
+  _LiquidateSalariesPageState createState() =>
+      new _LiquidateSalariesPageState();
 }
 
-class _PaySalariesPageState extends State<PaySalariesPage> {
-  List<Employee> _listEmployees = List();
-  bool _isLoading = true;
+class _LiquidateSalariesPageState extends State<LiquidateSalariesPage> {
+  bool _isLoading = false;
   List<String> _listMonths = [
     "Enero",
     "Febrero",
@@ -30,31 +33,31 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
     "Diciembre",
   ];
   List<String> _listYears = ["2019", "2018", "2017"];
+  List<Employee> _listEmployees = List();
   String _month;
   String _year;
 
-  _getEmployees() {
-    ApiModule().getEmployees().then((result) {
+  _searchEmployees(int month, int year) {
+    setState(() => _isLoading = true);
+    ApiModule().getLiquidationEmployees(month, year).then((result) {
       setState(() {
         _isLoading = false;
         _listEmployees = result;
       });
     }).catchError((error) {
-      setState(() => _isLoading = false);
+      setState(() {
+        _listEmployees.clear();
+        _isLoading = false;
+      });
       errorCase(error.message, context);
     });
-  }
-
-  @override
-  void initState() {
-    _getEmployees();
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
+      drawer: MenuDrawer(),
       body: _body(),
     );
   }
@@ -62,7 +65,7 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
   Widget _appBar() {
     return AppBar(
       title: Text(
-        LocaleSingleton.strings.paySalaries,
+        LocaleSingleton.strings.liquidateSalaries,
         style: TextStyle(
           fontSize: 22.0,
           fontFamily: 'WorkSans Bold',
@@ -75,19 +78,28 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
           bottom: Radius.circular(10),
         ),
       ),
+      actions: <Widget>[
+        IconButton(
+          icon: Image.asset(
+            "assets/icons/pay_icon.png",
+            color: Colors.white,
+          ),
+          onPressed: () =>
+              GeneralNavigator(context, PaySalariesPage()).navigate(),
+        )
+      ],
     );
   }
 
   Widget _body() {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _monthFilter(),
             Divider(),
-            _titleEmployees(),
             _listUsers(),
           ],
         ),
@@ -210,14 +222,15 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
             width: MediaQuery.of(context).size.width,
             child: RaisedButton(
               child: Text(
-                LocaleSingleton.strings.pay.toUpperCase(),
+                LocaleSingleton.strings.search.toUpperCase(),
                 style: TextStyle(
                   fontSize: 17.5,
                   fontFamily: 'WorkSans Bold',
                 ),
               ),
               onPressed: _month != null && _year != null
-                  ? () => _paySalaries(_getMonthCode(_month), int.parse(_year))
+                  ? () =>
+                      _searchEmployees(_getMonthCode(_month), int.parse(_year))
                   : null,
               color: Ui.primaryColor,
               textColor: Colors.white,
@@ -227,20 +240,6 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _titleEmployees() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: Text(
-        LocaleSingleton.strings.employeesLiquidated,
-        style: TextStyle(
-          fontFamily: 'WorkSans Bold',
-          fontSize: 22.0,
-        ),
-        textAlign: TextAlign.center,
       ),
     );
   }
@@ -259,22 +258,38 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: _listEmployees.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage:
-                              AssetImage("assets/icons/dumbbell_icon.png"),
-                        ),
-                        title: Text(
-                          "${_listEmployees[index].name} ${_listEmployees[index].lastName}",
-                          style: TextStyle(
-                            fontFamily: 'WorkSans Regular',
-                            fontSize: 15.0,
+                    return GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage:
+                                AssetImage("assets/icons/dumbbell_icon.png"),
+                          ),
+                          title: Text(
+                            "${_listEmployees[index].name} ${_listEmployees[index].lastName}",
+                            style: TextStyle(
+                              fontFamily: 'WorkSans Regular',
+                              fontSize: 15.0,
+                            ),
                           ),
                         ),
                       ),
+                      onTap: () async {
+                        var result = await GeneralNavigator(
+                          context,
+                          LiquidateSalariesDetailPage(
+                            employee: _listEmployees[index],
+                            month: _getMonthCode(_month),
+                            year: int.parse(_year),
+                          ),
+                        ).navigate();
+                        if (result) {
+                          _searchEmployees(
+                              _getMonthCode(_month), int.parse(_year));
+                        }
+                      },
                     );
                   },
                 ),
@@ -312,25 +327,5 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
       default:
         return 0;
     }
-  }
-
-  _paySalaries(int month, int year) {
-    ApiModule().paySalaries(month, year).then((result) {
-      _showPopup("Se pagaron todas las liquidaciones");
-    }).catchError((error) {
-      setState(() => _isLoading = false);
-      errorCase(error.message, context);
-    });
-  }
-
-  void _showPopup(String message) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) => SuccessfulPopup(
-        message: message,
-        context: context,
-      ),
-    );
   }
 }

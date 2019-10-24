@@ -10,17 +10,18 @@ import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/successful_page.dart';
 import 'package:ia_mobile/src/widgets/successful_popup.dart';
 
-class PaySalariesDetailPage extends StatefulWidget {
-  PaySalariesDetailPage({this.employee, this.month, this.year});
+class LiquidateSalariesDetailPage extends StatefulWidget {
+  LiquidateSalariesDetailPage({this.employee, this.month, this.year});
   final Employee employee;
   final int month;
   final int year;
   @override
-  _PaySalariesDetailPageState createState() =>
-      new _PaySalariesDetailPageState();
+  _LiquidateSalariesDetailPageState createState() =>
+      new _LiquidateSalariesDetailPageState();
 }
 
-class _PaySalariesDetailPageState extends State<PaySalariesDetailPage> {
+class _LiquidateSalariesDetailPageState
+    extends State<LiquidateSalariesDetailPage> {
   // bool _holidayState = false;
   // bool _illnessState = false;
   // bool _studyDayState = false;
