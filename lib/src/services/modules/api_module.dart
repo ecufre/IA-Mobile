@@ -125,7 +125,7 @@ class ApiModule {
 
   // POST
   createMember(String name, String lastName, String dni, String email,
-      String sex, DateTime birthDate) async {
+      String sex, String cbu, String cuit, DateTime birthDate) async {
     String path = 'socios';
     var uri = new Uri.http(baseUrl, modulePath + path);
     Map<String, String> header = {
@@ -136,9 +136,11 @@ class ApiModule {
       "apellido": lastName,
       "dni": dni,
       "email": email,
-      "sexo": sex,
+      "sexo": "Masculino",
       "fechaNacimiento": birthDate.toIso8601String(),
-      "fechaAlta": DateTime.now().toIso8601String()
+      "fechaAlta": DateTime.now().toIso8601String(),
+      "CBU": cbu,
+      "CUIT": cuit
     };
 
     var response = await apiResponse.postJson(uri, header, body);
@@ -157,6 +159,8 @@ class ApiModule {
       String dni,
       String email,
       String sex,
+      String cbu,
+      String cuit,
       DateTime birthDate,
       double salaryPerHour,
       EmployeeType employeeType) async {
@@ -173,7 +177,9 @@ class ApiModule {
         "email": email,
         "sexo": "Masculino",
         "fechaNacimiento": birthDate.toIso8601String(),
-        "fechaAlta": DateTime.now().toIso8601String()
+        "fechaAlta": DateTime.now().toIso8601String(),
+        "CBU": cbu,
+        "CUIT": cuit
       },
       "idTipoEmpleado": employeeType.id,
       "sueldoBasicoCostoHora": salaryPerHour,
