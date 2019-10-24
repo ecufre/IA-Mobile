@@ -8,8 +8,7 @@ import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/custom_text_field.dart';
 
 class CardPage extends StatefulWidget {
-  CardPage({this.name, this.function});
-  final String name;
+  CardPage({this.function});
   final function;
   @override
   _CardPageState createState() => new _CardPageState();
@@ -20,21 +19,25 @@ class _CardPageState extends State<CardPage> {
   String _cardNumber = "";
   String _expiryDate = "";
   String _cvvCode = "";
+  String _dni;
   bool isCvvFocused = false;
   List<bool> _noErrors = [];
 
   TextEditingController _cardNumberController = TextEditingController();
   TextEditingController _expiryDateController = TextEditingController();
   TextEditingController _cvvCodeController = TextEditingController();
+  TextEditingController _dniController = TextEditingController();
 
   FocusNode textCardNumberFocusNode = FocusNode();
   FocusNode textExpiryDateFocusNode = FocusNode();
   FocusNode textCvvCodeFocusNode = FocusNode();
+  FocusNode textDniFocusNode = FocusNode();
 
   void _resetTextFocus() {
     textCardNumberFocusNode.unfocus();
     textExpiryDateFocusNode.unfocus();
     textCvvCodeFocusNode.unfocus();
+    textDniFocusNode.unfocus();
   }
 
   @override
@@ -42,7 +45,7 @@ class _CardPageState extends State<CardPage> {
     _cardNumberController.dispose();
     _expiryDateController.dispose();
     _cvvCodeController.dispose();
-
+    _dniController.dispose();
     super.dispose();
   }
 
@@ -69,6 +72,29 @@ class _CardPageState extends State<CardPage> {
     _expiryDateController.addListener(() {
       if (_expiryDateController.text.isNotEmpty) {
         setState(() {
+          if (_expiryDateController.text.length == 1) {
+            if (_expiryDateController.text[0] != "0" &&
+                _expiryDateController.text[0] != "1") {
+              _expiryDateController.text = "";
+            }
+          }
+          if (_expiryDateController.text.length == 2) {
+            if (_expiryDateController.text[0] == "1") {
+              if (_expiryDateController.text[1] != "0" &&
+                  _expiryDateController.text[1] != "1" &&
+                  _expiryDateController.text[1] != "2") {
+                _expiryDateController.text = _expiryDateController.text[0];
+              }
+            }
+          }
+          if (_expiryDateController.text.length == 3) {
+            if (_expiryDateController.text[2] != "/") {
+              _expiryDateController.text = _expiryDateController.text[0] +
+                  _expiryDateController.text[1] +
+                  "/" +
+                  _expiryDateController.text[2];
+            }
+          }
           _expiryDate = _expiryDateController.text;
           isCvvFocused = false;
         });
@@ -136,6 +162,7 @@ class _CardPageState extends State<CardPage> {
               _builtCardNumber(),
               _builtCardExpiryDate(),
               _builtCvvCode(),
+              _builtDNI(),
               _button(),
             ],
           ),
@@ -148,7 +175,7 @@ class _CardPageState extends State<CardPage> {
     return CreditCardWidget(
       cardNumber: _cardNumber,
       expiryDate: _expiryDate,
-      cardHolderName: widget.name.toUpperCase(),
+      cardHolderName: " ",
       cvvCode: _cvvCode,
       showBackView: isCvvFocused, //true when you want to show cvv(back) view
     );
@@ -212,6 +239,12 @@ class _CardPageState extends State<CardPage> {
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
           labelText: LocaleSingleton.strings.expiryDate.toUpperCase(),
+          hintText: "02/05",
+          hintStyle: TextStyle(
+            fontFamily: 'WorkSans Regular',
+            fontSize: 15.0,
+            color: Colors.grey,
+          ),
           labelStyle: TextStyle(
             fontFamily: 'WorkSans Regular',
             fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
@@ -247,7 +280,7 @@ class _CardPageState extends State<CardPage> {
           fontSize: 15.0,
         ),
         onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(FocusNode());
+          FocusScope.of(context).requestFocus(textDniFocusNode);
         },
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
@@ -272,6 +305,46 @@ class _CardPageState extends State<CardPage> {
           WhitelistingTextInputFormatter(
             GeneralRegex.regexOnlyNumbers,
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _builtDNI() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: CustomTextFormField(
+        controller: _dniController,
+        focusNode: textDniFocusNode,
+        key: Key('dni'),
+        style: TextStyle(
+          color: Colors.black,
+          fontFamily: 'WorkSans Regular',
+          fontSize: 15.0,
+        ),
+        onFieldSubmitted: (String value) {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: LocaleSingleton.strings.dni.toUpperCase(),
+          labelStyle: TextStyle(
+            fontFamily: 'WorkSans Regular',
+            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
+            color: Colors.black,
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Ui.primaryColor),
+          ),
+        ),
+        autocorrect: false,
+        onSaved: (val) => _dni = val,
+        validator: (val) =>
+            val.isEmpty ? LocaleSingleton.strings.dniError : null,
+        textCapitalization: TextCapitalization.sentences,
+        noErrorsCallback: (bool val) => _confirmErrors(val),
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(10),
         ],
       ),
     );
@@ -312,7 +385,7 @@ class _CardPageState extends State<CardPage> {
   void _validateAndSubmit() async {
     if (_validateAndSave()) {
       try {
-        widget.function(_cardNumber, _expiryDate, _cvvCode);
+        widget.function(_cardNumber, _expiryDate, _cvvCode, _dni);
         _saveCard();
       } catch (e) {
         print(e.toString());

@@ -210,10 +210,8 @@ class ApiModule {
   }
 
   // POST
-  payBill(
-    int idBill,
-    int idPaymentMethod,
-  ) async {
+  payBill(int idBill, int idPaymentMethod, String card, String expiryDate,
+      String cvvCode, String dni) async {
     String path = 'movimientos';
     var uri = new Uri.http(baseUrl, modulePath + path);
     Map<String, String> header = {
@@ -221,7 +219,11 @@ class ApiModule {
     };
     Map<String, dynamic> body = {
       "idFactura": idBill,
-      "idMedioDePago": idPaymentMethod
+      "idMedioDePago": idPaymentMethod,
+      "nroTarjeta": card,
+      "fechaVencimiento": expiryDate,
+      "codSeguridad": cvvCode,
+      "DNI": dni
     };
 
     var response = await apiResponse.postJson(uri, header, body);

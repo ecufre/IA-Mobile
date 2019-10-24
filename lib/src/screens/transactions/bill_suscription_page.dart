@@ -32,11 +32,11 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
   String _cardNumber;
   String _expiryDate;
   String _cvvCode;
+  String _dni;
 
   @override
   void initState() {
     _getPassesType();
-
     super.initState();
   }
 
@@ -100,7 +100,9 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
               _suscriptionType(),
               _sinceAndUpToDetail(),
               _methodsOfPayment(),
-              _addCreditCardButton(),
+              _methodOfPayment != null && _methodOfPayment.isCard
+                  ? _addCreditCardButton()
+                  : SizedBox(),
               _button(),
             ],
           );
@@ -295,6 +297,12 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
               },
             ).toList(),
             onChanged: (dynamic newValueSelected) {
+              if (_methodOfPayment != newValueSelected) {
+                _cardNumber = null;
+                _expiryDate = null;
+                _cvvCode = null;
+                _dni = null;
+              }
               setState(() {
                 _methodOfPayment = newValueSelected;
               });
@@ -331,7 +339,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
                           ),
                           SizedBox(height: 5.0),
                           Text(
-                            LocaleSingleton.strings.addCreditCard,
+                            LocaleSingleton.strings.addCard,
                             style: TextStyle(
                               fontSize: 12,
                               fontFamily: 'WorkSans Bold',
@@ -345,9 +353,8 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
                     onPressed: () => GeneralNavigator(
                       context,
                       CardPage(
-                        name: "${widget.member.name} ${widget.member.lastName}",
-                        function: (number, date, code) =>
-                            _addCard(number, date, code),
+                        function: (number, date, code, dni) =>
+                            _addCard(number, date, code, dni),
                       ),
                     ).navigate(),
                     color: Ui.primaryColor,
@@ -386,11 +393,12 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
     );
   }
 
-  _addCard(String number, String date, String code) {
+  _addCard(String number, String date, String code, String dniNumber) {
     setState(() {
       _cardNumber = number;
       _expiryDate = date;
       _cvvCode = code;
+      _dni = dniNumber;
     });
   }
 
@@ -423,7 +431,10 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
   }
 
   _payBill(int idBill, int idPaymentMethod) {
-    ApiModule().payBill(idBill, idPaymentMethod).then((result) {
+    ApiModule()
+        .payBill(
+            idBill, idPaymentMethod, _cardNumber, _expiryDate, _cvvCode, _dni)
+        .then((result) {
       setState(() {
         _isLoading = false;
       });
