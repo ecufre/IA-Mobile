@@ -7,6 +7,8 @@ class PaymentMethod {
   int id;
   @JsonKey(name: 'nombre')
   String name;
+  @JsonKey(name: 'esTarjeta')
+  bool isCard;
 
   PaymentMethod({this.id, this.name});
 
