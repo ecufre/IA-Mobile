@@ -258,4 +258,46 @@ class ApiModule {
       throw Exception(jsonResult['message']);
     }
   }
+
+  // POST
+  arrivalRequest(
+    int idPeople,
+    String idRol,
+  ) async {
+    String path = 'fichero/ingreso';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+    };
+    Map<String, dynamic> body = {"idPersona": idPeople, "idRol": idRol};
+
+    var response = await apiResponse.postJson(uri, header, body);
+    var jsonResult = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResult['successful']) {
+      return true;
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // POST
+  departureRequest(
+    int idPeople,
+    String idRol,
+  ) async {
+    String path = 'fichero/egreso';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+    };
+    Map<String, dynamic> body = {"idPersona": idPeople, "idRol": idRol};
+
+    var response = await apiResponse.postJson(uri, header, body);
+    var jsonResult = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResult['successful']) {
+      return true;
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
 }

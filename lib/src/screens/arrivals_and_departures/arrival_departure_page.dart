@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/error_case.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/models/people.dart';
 import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/search_bar.dart';
+import 'package:ia_mobile/src/widgets/successful_popup.dart';
 
 class ArrivalAndDeparturePage extends StatefulWidget {
   @override
@@ -16,11 +18,14 @@ class ArrivalAndDeparturePage extends StatefulWidget {
 class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
   String _search;
   bool _isLoading = true;
+  List<String> _listRols = ["SOCIO", "EMPLEADO"];
+  String _rol = "EMPLEADO";
 
   TextEditingController _searchController = TextEditingController();
   FocusNode textSearchFocusNode = FocusNode();
   List<People> _listPeople = List();
   List<People> _listFilterPeople = List();
+  List<People> _listFilterRol = List();
 
   _ArrivalAndDeparturePageState() {
     _searchController.addListener(() {
@@ -49,7 +54,8 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
       setState(() {
         _isLoading = false;
         _listPeople = result;
-        _listFilterPeople.addAll(_listPeople);
+        _filterRol();
+        _listFilterPeople.addAll(_listFilterRol);
       });
     });
   }
@@ -65,21 +71,44 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
 
   Widget _appBar() {
     return AppBar(
-        title: Text(
-          LocaleSingleton.strings.arrivalsAndDepartures,
-          style: TextStyle(
-            fontSize: 22.0,
-            fontFamily: 'WorkSans Bold',
-          ),
+      title: Text(
+        LocaleSingleton.strings.arrivalsAndDepartures,
+        style: TextStyle(
+          fontSize: 22.0,
+          fontFamily: 'WorkSans Bold',
         ),
-        backgroundColor: Ui.primaryColor,
-        centerTitle: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(10),
-          ),
+      ),
+      backgroundColor: Ui.primaryColor,
+      centerTitle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(10),
         ),
-        actions: <Widget>[]);
+      ),
+      actions: <Widget>[
+        PopupMenuButton<String>(
+          onSelected: (value) => _changeRol(value),
+          itemBuilder: (BuildContext context) {
+            return _listRols.map((String item) {
+              return PopupMenuItem<String>(
+                value: item,
+                child: Text(item),
+              );
+            }).toList();
+          },
+        ),
+      ],
+    );
+  }
+
+  _changeRol(String value) {
+    setState(() {
+      _rol = value;
+      _searchController.text = "";
+      _search = "";
+    });
+    _filterRol();
+    _filterPeople();
   }
 
   Widget _body() {
@@ -142,7 +171,7 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "${_listFilterPeople[index].rols[0].toString()} ",
+                        _rol == "SOCIO" ? "SOCIO" : "EMPLEADO",
                         style: TextStyle(
                           fontFamily: 'WorkSans Regular',
                           fontSize: 13.0,
@@ -160,7 +189,8 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
                                   fontFamily: "WorkSans Bold",
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () =>
+                                  _arrivalAction(_listFilterPeople[index]),
                               color: Colors.green,
                             ),
                           ),
@@ -174,7 +204,8 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
                                   fontFamily: "WorkSans Bold",
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () =>
+                                  _departureAction(_listFilterPeople[index]),
                               color: Colors.red,
                             ),
                           ),
@@ -195,7 +226,7 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
   _filterPeople() {
     _listFilterPeople.clear();
     setState(() {
-      _listPeople.forEach((item) {
+      _listFilterRol.forEach((item) {
         if (item.name
             .toString()
             .toLowerCase()
@@ -204,5 +235,55 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
         }
       });
     });
+  }
+
+  _filterRol() {
+    _listFilterRol.clear();
+    setState(() {
+      _listPeople.forEach((item) {
+        if (item.rols.contains(_rol)) {
+          _listFilterRol.add(item);
+        }
+      });
+    });
+  }
+
+  _arrivalAction(People people) {
+    setState(() => _isLoading = true);
+    ApiModule()
+        .arrivalRequest(people.id, people.rols[0].toString())
+        .then((result) {
+      setState(() => _isLoading = false);
+      _showPopup(
+          "Se resgistró correctamente el ingreso de ${people.name} ${people.lastName}");
+    }).catchError((error) {
+      setState(() => _isLoading = false);
+      errorCase(error.message, context);
+    });
+  }
+
+  _departureAction(People people) {
+    setState(() => _isLoading = true);
+    ApiModule()
+        .arrivalRequest(people.id, people.rols[0].toString())
+        .then((result) {
+      setState(() => _isLoading = false);
+      _showPopup(
+          "Se resgistró correctamente la salida de ${people.name} ${people.lastName}");
+    }).catchError((error) {
+      setState(() => _isLoading = false);
+      errorCase(error.message, context);
+    });
+  }
+
+  void _showPopup(String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => SuccessfulPopup(
+        message: message,
+        context: context,
+      ),
+    );
   }
 }

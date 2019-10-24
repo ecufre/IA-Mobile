@@ -71,7 +71,6 @@ class _CardPageState extends State<CardPage> {
         setState(() {
           _expiryDate = _expiryDateController.text;
           isCvvFocused = false;
-          ;
         });
       } else {
         setState(() {
