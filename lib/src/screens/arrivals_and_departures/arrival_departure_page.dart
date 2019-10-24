@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
 import 'package:ia_mobile/src/helpers/error_case.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
+import 'package:ia_mobile/src/models/member.dart';
 import 'package:ia_mobile/src/models/people.dart';
 import 'package:ia_mobile/src/screens/menu_drawer/menu_drawer.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
@@ -18,14 +19,11 @@ class ArrivalAndDeparturePage extends StatefulWidget {
 class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
   String _search;
   bool _isLoading = true;
-  List<String> _listRols = ["SOCIO", "EMPLEADO"];
-  String _rol = "EMPLEADO";
 
   TextEditingController _searchController = TextEditingController();
   FocusNode textSearchFocusNode = FocusNode();
-  List<People> _listPeople = List();
-  List<People> _listFilterPeople = List();
-  List<People> _listFilterRol = List();
+  List<Member> _listMembers = List();
+  List<Member> _listFilterMembers = List();
 
   _ArrivalAndDeparturePageState() {
     _searchController.addListener(() {
@@ -45,17 +43,16 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
 
   @override
   void initState() {
-    _getPeople();
+    _getMembers();
     super.initState();
   }
 
-  _getPeople() {
-    ApiModule().getPeople().then((result) {
+  _getMembers() {
+    ApiModule().getMembers().then((result) {
       setState(() {
         _isLoading = false;
-        _listPeople = result;
-        _filterRol();
-        _listFilterPeople.addAll(_listFilterRol);
+        _listMembers = result;
+        _listFilterMembers.addAll(_listMembers);
       });
     });
   }
@@ -85,34 +82,7 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
           bottom: Radius.circular(10),
         ),
       ),
-      actions: <Widget>[
-        PopupMenuButton<String>(
-          icon: Icon(
-            Icons.filter_list,
-            color: Colors.white,
-          ),
-          onSelected: (value) => _changeRol(value),
-          itemBuilder: (BuildContext context) {
-            return _listRols.map((String item) {
-              return PopupMenuItem<String>(
-                value: item,
-                child: Text(item),
-              );
-            }).toList();
-          },
-        ),
-      ],
     );
-  }
-
-  _changeRol(String value) {
-    setState(() {
-      _rol = value;
-      _searchController.text = "";
-      _search = "";
-    });
-    _filterRol();
-    _filterPeople();
   }
 
   Widget _body() {
@@ -151,7 +121,7 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
       child: ListView.builder(
         shrinkWrap: true,
         addRepaintBoundaries: true,
-        itemCount: _listFilterPeople.length,
+        itemCount: _listFilterMembers.length,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           return Padding(
@@ -165,55 +135,43 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
                         AssetImage("assets/icons/dumbbell_icon.png"),
                   ),
                   title: Text(
-                    "${_listFilterPeople[index].name} ${_listFilterPeople[index].lastName}",
+                    "${_listFilterMembers[index].name} ${_listFilterMembers[index].lastName}",
                     style: TextStyle(
                       fontFamily: 'WorkSans Regular',
                       fontSize: 15.0,
                     ),
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        _rol == "SOCIO" ? "SOCIO" : "EMPLEADO",
-                        style: TextStyle(
-                          fontFamily: 'WorkSans Regular',
-                          fontSize: 13.0,
+                      Container(
+                        child: RaisedButton(
+                          child: Text(
+                            "Ingreso",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "WorkSans Bold",
+                            ),
+                          ),
+                          onPressed: () =>
+                              _arrivalAction(_listFilterMembers[index]),
+                          color: Colors.green,
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            child: RaisedButton(
-                              child: Text(
-                                "Ingreso",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "WorkSans Bold",
-                                ),
-                              ),
-                              onPressed: () =>
-                                  _arrivalAction(_listFilterPeople[index]),
-                              color: Colors.green,
+                      SizedBox(width: 10.0),
+                      Container(
+                        child: RaisedButton(
+                          child: Text(
+                            "Salida",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "WorkSans Bold",
                             ),
                           ),
-                          SizedBox(width: 10.0),
-                          Container(
-                            child: RaisedButton(
-                              child: Text(
-                                "Salida",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "WorkSans Bold",
-                                ),
-                              ),
-                              onPressed: () =>
-                                  _departureAction(_listFilterPeople[index]),
-                              color: Colors.red,
-                            ),
-                          ),
-                        ],
+                          onPressed: () =>
+                              _departureAction(_listFilterMembers[index]),
+                          color: Colors.red,
+                        ),
                       ),
                     ],
                   ),
@@ -228,25 +186,14 @@ class _ArrivalAndDeparturePageState extends State<ArrivalAndDeparturePage> {
   }
 
   _filterPeople() {
-    _listFilterPeople.clear();
+    _listFilterMembers.clear();
     setState(() {
-      _listFilterRol.forEach((item) {
+      _listMembers.forEach((item) {
         if (item.name
             .toString()
             .toLowerCase()
             .contains(_search.toLowerCase())) {
-          _listFilterPeople.add(item);
-        }
-      });
-    });
-  }
-
-  _filterRol() {
-    _listFilterRol.clear();
-    setState(() {
-      _listPeople.forEach((item) {
-        if (item.rols.contains(_rol)) {
-          _listFilterRol.add(item);
+          _listFilterMembers.add(item);
         }
       });
     });
