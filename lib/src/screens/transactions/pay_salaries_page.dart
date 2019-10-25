@@ -5,6 +5,7 @@ import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/models/employee.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
+import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/successful_popup.dart';
 
 class PaySalariesPage extends StatefulWidget {
@@ -44,6 +45,18 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
       errorCase(error.message, context);
     });
   }
+
+  //   _searchLiquidatedEmployees(int month, int year) {
+  //    ApiModule().getLiquidatedEmployee().then((result) {
+  //     setState(() {
+  //       _isLoading = false;
+  //       _listEmployees = result;
+  //     });
+  //   }).catchError((error) {
+  //     setState(() => _isLoading = false);
+  //     errorCase(error.message, context);
+  //   });
+  // }
 
   @override
   void initState() {
@@ -87,6 +100,7 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
           children: <Widget>[
             _monthFilter(),
             Divider(),
+            _listEmployees.isNotEmpty ? _payButton() : SizedBox(),
             _titleEmployees(),
             _listUsers(),
           ],
@@ -210,7 +224,7 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
             width: MediaQuery.of(context).size.width,
             child: RaisedButton(
               child: Text(
-                LocaleSingleton.strings.pay.toUpperCase(),
+                LocaleSingleton.strings.search.toUpperCase(),
                 style: TextStyle(
                   fontSize: 17.5,
                   fontFamily: 'WorkSans Bold',
@@ -228,6 +242,19 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _payButton() {
+    return CustomRaisedButton(
+      text: LocaleSingleton.strings.pay.toUpperCase(),
+      function: () => _paySalaries(_getMonthCode(_month), int.parse(_year)),
+      context: context,
+      buttonColor: Ui.primaryColor,
+      textColor: Colors.white,
+      fontSize: 17.5,
+      fontFamily: 'WorkSans Bold',
+      circularRadius: 3.5,
     );
   }
 
@@ -318,12 +345,13 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
     ApiModule().paySalaries(month, year).then((result) {
       _showPopup("Se pagaron todas las liquidaciones");
     }).catchError((error) {
-      setState(() => _isLoading = false);
+      Navigator.pop(context);
       errorCase(error.message, context);
     });
   }
 
   void _showPopup(String message) {
+    Navigator.pop(context);
     showDialog(
       barrierDismissible: false,
       context: context,

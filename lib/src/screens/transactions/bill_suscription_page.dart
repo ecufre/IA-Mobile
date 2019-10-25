@@ -365,29 +365,57 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
                     ),
                   ),
                 )
-              : Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5.0),
-                    ),
-                    border: Border.all(color: Colors.black38),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset(
-                          "assets/icons/card_icon.png",
-                          scale: 11.0,
+              : Column(
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5.0),
                         ),
-                        Text(
-                          LocaleSingleton.strings.cardAdded,
-                          textAlign: TextAlign.center,
-                        )
-                      ],
+                        border: Border.all(color: Colors.black38),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/icons/card_icon.png",
+                              scale: 11.0,
+                            ),
+                            Text(
+                              LocaleSingleton.strings.cardAdded,
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ))
+                    Container(
+                      child: RaisedButton(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            "Eliminar",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "WorkSans Bold",
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _cardNumber = null;
+                            _expiryDate = null;
+                            _cvvCode = null;
+                            _dni = null;
+                          });
+                        },
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                )
         ],
       ),
     );

@@ -108,7 +108,7 @@ class ApiModule {
 
   // GET
   getLiquidationEmployees(int month, int year) async {
-    String path = 'liquidaciones';
+    String path = 'liquidaciones/pagar';
     Map<String, String> _query = {
       'mes': month.toString(),
       'anio': year.toString(),

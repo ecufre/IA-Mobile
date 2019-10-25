@@ -385,7 +385,10 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
         textCapitalization: TextCapitalization.sentences,
         noErrorsCallback: (bool val) => _confirmErrors(val),
         inputFormatters: [
-          LengthLimitingTextInputFormatter(75),
+          LengthLimitingTextInputFormatter(10),
+          WhitelistingTextInputFormatter(
+            GeneralRegex.regexOnlyNumbers,
+          ),
         ],
       ),
     );

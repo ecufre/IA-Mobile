@@ -9,6 +9,7 @@ import 'package:ia_mobile/src/widgets/custom_text_field.dart';
 
 class CardPage extends StatefulWidget {
   CardPage({this.function});
+
   final function;
   @override
   _CardPageState createState() => new _CardPageState();
@@ -122,6 +123,11 @@ class _CardPageState extends State<CardPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
@@ -210,12 +216,18 @@ class _CardPageState extends State<CardPage> {
         ),
         autocorrect: false,
         onSaved: (val) => _cardNumber = val,
-        validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.cardNumberError : null,
+        validator: (val) => val.isEmpty
+            ? LocaleSingleton.strings.cardNumberError
+            : val.length < 16
+                ? LocaleSingleton.strings.cardNumberAmountError
+                : null,
         textCapitalization: TextCapitalization.sentences,
         noErrorsCallback: (bool val) => _confirmErrors(val),
         inputFormatters: [
           LengthLimitingTextInputFormatter(16),
+          WhitelistingTextInputFormatter(
+            GeneralRegex.regexOnlyNumbers,
+          ),
         ],
       ),
     );
@@ -345,6 +357,9 @@ class _CardPageState extends State<CardPage> {
         noErrorsCallback: (bool val) => _confirmErrors(val),
         inputFormatters: [
           LengthLimitingTextInputFormatter(10),
+          WhitelistingTextInputFormatter(
+            GeneralRegex.regexOnlyNumbers,
+          ),
         ],
       ),
     );

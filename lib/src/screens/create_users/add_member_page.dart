@@ -351,7 +351,10 @@ class _AddMemberPageState extends State<AddMemberPage> {
         textCapitalization: TextCapitalization.sentences,
         noErrorsCallback: (bool val) => _confirmErrors(val),
         inputFormatters: [
-          LengthLimitingTextInputFormatter(75),
+          LengthLimitingTextInputFormatter(10),
+          WhitelistingTextInputFormatter(
+            GeneralRegex.regexOnlyNumbers,
+          ),
         ],
       ),
     );

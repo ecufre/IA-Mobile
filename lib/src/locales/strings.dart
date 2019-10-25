@@ -83,4 +83,5 @@ class Strings {
   String cuitError;
   String pay;
   String employeesLiquidated;
+  String cardNumberAmountError;
 }
