@@ -87,5 +87,7 @@ class SpanishStrings extends Strings {
     super.pay = 'Pagar';
     super.employeesLiquidated = 'Empleados Liquidados';
     super.cardNumberAmountError = 'Debe ingresar 16 números';
+    super.birthday = 'Fecha de Nacimiento';
+    super.change = 'Cambiar';
   }
 }

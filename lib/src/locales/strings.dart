@@ -85,4 +85,6 @@ class Strings {
   String pay;
   String employeesLiquidated;
   String cardNumberAmountError;
+  String birthday;
+  String change;
 }

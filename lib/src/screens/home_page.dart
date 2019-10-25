@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
       child: SearchBar(
         controller: _searchController,
         focusNode: textSearchFocusNode,
-        keyType: TextInputType.number,
+        keyType: TextInputType.text,
         hintText: LocaleSingleton.strings.search,
         function: () => _filterMembers(),
       ),

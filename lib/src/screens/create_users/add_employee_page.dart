@@ -15,6 +15,7 @@ import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
 import 'package:ia_mobile/src/widgets/custom_text_field.dart';
 import 'package:ia_mobile/src/widgets/successful_popup.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class AddEmployeePage extends StatefulWidget {
   @override
@@ -36,6 +37,9 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   String _salary;
   String _cbu;
   String _cuit;
+  String _date;
+  DateTime _birthday;
+
   EmployeeType _employeeType;
   bool _isLoading = true;
 
@@ -235,6 +239,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
           _builtLastName(),
           _builtDNI(),
           _builtEmail(),
+          _builtBirthday(),
           _builtCbu(),
           _builtCuit(),
           _builtSex(),
@@ -434,6 +439,80 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     );
   }
 
+  Widget _builtBirthday() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: GestureDetector(
+        onTap: () {
+          {
+            DatePicker.showDatePicker(
+              context,
+              theme: DatePickerTheme(
+                containerHeight: 210.0,
+              ),
+              showTitleActions: true,
+              minTime: DateTime(1940, 1, 1),
+              maxTime: DateTime(2022, 12, 31),
+              onConfirm: (date) {
+                _birthday = date;
+                _date = '${date.day} - ${date.month} - ${date.year}';
+                setState(() {});
+              },
+              currentTime: DateTime.now(),
+              locale: LocaleType.es,
+            );
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(5.0),
+            ),
+            border: Border.all(color: Colors.black38),
+          ),
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            child: _birthday == null
+                ? Text(
+                    LocaleSingleton.strings.birthday,
+                    style: TextStyle(
+                      fontSize: 17.5,
+                      fontFamily: 'WorkSans Regular',
+                      color: Colors.black,
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          " $_date",
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontFamily: 'WorkSans Regular',
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          LocaleSingleton.strings.change,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontFamily: 'WorkSans Bold',
+                            color: Colors.black,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _builtCbu() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -527,11 +606,12 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(5.0),
-              ),
-              border: Border.all(color: Colors.black38)),
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(5.0),
+            ),
+            border: Border.all(color: Colors.black38),
+          ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<dynamic>(
               key: widget.key,
@@ -706,6 +786,8 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
           Divider(),
           _detail(LocaleSingleton.strings.email, _email),
           Divider(),
+          _detail(LocaleSingleton.strings.birthday, _date),
+          Divider(),
           _detail(LocaleSingleton.strings.cbu, _cbu),
           Divider(),
           _detail(LocaleSingleton.strings.cuit, _cuit),
@@ -758,7 +840,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   }
 
   _pageOneWidgetValidation() {
-    return _sex != null;
+    return _sex != null && _birthday != null;
   }
 
   _pageTwoWidgetValidation() {
@@ -859,7 +941,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     });
     ApiModule()
         .createEmployee(_name, _lastName, _dni, _email, _sex, _cbu, _cuit,
-            DateTime.now(), double.parse(_salary), _employeeType)
+            _birthday, double.parse(_salary), _employeeType)
         .then((result) {
       setState(() {
         _isLoading = false;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:ia_mobile/src/commons/enums/ConnectivityStatus.dart';
 import 'package:ia_mobile/src/commons/enums/formMember.dart';
 import 'package:ia_mobile/src/commons/general_regex.dart';
@@ -35,6 +36,8 @@ class _AddMemberPageState extends State<AddMemberPage> {
   String _dni;
   String _sex;
   bool _isLoading = false;
+  String _date;
+  DateTime _birthday;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
@@ -194,6 +197,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
           _builtLastName(),
           _builtDNI(),
           _builtEmail(),
+          _builtBirthday(),
           _builtSex(),
         ],
       ),
@@ -388,6 +392,80 @@ class _AddMemberPageState extends State<AddMemberPage> {
     );
   }
 
+  Widget _builtBirthday() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: GestureDetector(
+        onTap: () {
+          {
+            DatePicker.showDatePicker(
+              context,
+              theme: DatePickerTheme(
+                containerHeight: 210.0,
+              ),
+              showTitleActions: true,
+              minTime: DateTime(1940, 1, 1),
+              maxTime: DateTime(2022, 12, 31),
+              onConfirm: (date) {
+                _birthday = date;
+                _date = '${date.day} - ${date.month} - ${date.year}';
+                setState(() {});
+              },
+              currentTime: DateTime.now(),
+              locale: LocaleType.es,
+            );
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(5.0),
+            ),
+            border: Border.all(color: Colors.black38),
+          ),
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            child: _birthday == null
+                ? Text(
+                    LocaleSingleton.strings.birthday,
+                    style: TextStyle(
+                      fontSize: 17.5,
+                      fontFamily: 'WorkSans Regular',
+                      color: Colors.black,
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          " $_date",
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontFamily: 'WorkSans Regular',
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          LocaleSingleton.strings.change,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontFamily: 'WorkSans Bold',
+                            color: Colors.black,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _builtSex() {
     return GestureDetector(
       onTap: () => _resetTextFocus(),
@@ -472,6 +550,8 @@ class _AddMemberPageState extends State<AddMemberPage> {
           _detail(LocaleSingleton.strings.sex, _sex),
           Divider(),
           _detail(LocaleSingleton.strings.email, _email),
+          Divider(),
+          _detail(LocaleSingleton.strings.birthday, _date),
         ],
       ),
     );
@@ -502,7 +582,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
   }
 
   _pageOneWidgetValidation() {
-    return _sex != null;
+    return _sex != null && _birthday != null;
   }
 
   _moveToPageOne() {
@@ -580,7 +660,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
       _isLoading = true;
     });
     ApiModule()
-        .createMember(_name, _lastName, _dni, _email, _sex, DateTime.now())
+        .createMember(_name, _lastName, _dni, _email, _sex, _birthday)
         .then((result) {
       setState(() {
         _isLoading = false;

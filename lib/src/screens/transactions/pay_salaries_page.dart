@@ -16,6 +16,7 @@ class PaySalariesPage extends StatefulWidget {
 class _PaySalariesPageState extends State<PaySalariesPage> {
   List<Employee> _listEmployees = List();
   bool _isLoading = false;
+  bool _isLoadingPage = false;
   List<String> _listMonths = [
     "Enero",
     "Febrero",
@@ -83,21 +84,24 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
   }
 
   Widget _body() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            _monthFilter(),
-            Divider(),
-            _listEmployees.isNotEmpty ? _payButton() : SizedBox(),
-            _listEmployees.isNotEmpty ? _titleEmployees() : SizedBox(),
-            _listUsers(),
-          ],
-        ),
-      ),
-    );
+    return _isLoadingPage
+        ? ColorLoaderPopup()
+        : SingleChildScrollView(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _monthFilter(),
+                  Divider(),
+                  _listEmployees.isNotEmpty ? _payButton() : SizedBox(),
+                  _listEmployees.isNotEmpty ? _titleEmployees() : SizedBox(),
+                  _listUsers(),
+                ],
+              ),
+            ),
+          );
   }
 
   Widget _monthFilter() {
@@ -334,9 +338,10 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
   }
 
   _paySalaries(int month, int year) {
+    setState(() => _isLoadingPage = true);
     ApiModule().payroll(month, year).then((result) {
-      _getLiquidatedEmployees(_getMonthCode(_month), int.parse(_year));
-      _showPopup("Se pagaron todas las liquidaciones");
+      setState(() => _isLoadingPage = false);
+      _showPopup(result);
     }).catchError((error) {
       Navigator.pop(context);
       errorCase(error.message, context);
@@ -350,7 +355,12 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
       builder: (BuildContext context) => SuccessfulPopup(
         message: message,
         context: context,
+        function: _back,
       ),
     );
+  }
+
+  _back() {
+    Navigator.pop(context);
   }
 }

@@ -246,7 +246,7 @@ class ApiModule {
       "nroTarjeta": card,
       "fechaVencimiento": expiryDate,
       "codSeguridad": cvvCode,
-      "DNI": dni
+      "dni": dni
     };
 
     var response = await apiResponse.postJson(uri, header, body);
@@ -362,7 +362,7 @@ class ApiModule {
     var response = await apiResponse.patchJson(uri, header, body);
     var jsonResult = json.decode(utf8.decode(response.bodyBytes));
     if (jsonResult['successful']) {
-      return true;
+      return jsonResult['message'];
     } else {
       throw Exception(jsonResult['message']);
     }

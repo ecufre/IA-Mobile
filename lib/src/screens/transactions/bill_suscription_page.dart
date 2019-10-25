@@ -10,6 +10,7 @@ import 'package:ia_mobile/src/screens/transactions/card_page.dart';
 import 'package:ia_mobile/src/services/modules/api_module.dart';
 import 'package:ia_mobile/src/widgets/color_loader_popup.dart';
 import 'package:ia_mobile/src/widgets/custom_raised_button.dart';
+import 'package:ia_mobile/src/widgets/error_case_popup.dart';
 import 'package:ia_mobile/src/widgets/successful_page.dart';
 import 'package:ia_mobile/src/widgets/successful_popup.dart';
 import 'package:intl/intl.dart';
@@ -473,6 +474,11 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
       } else {
         _showPopup(result);
       }
+    }).catchError((error) {
+      setState(() => _isLoading = false);
+      errorCase(error.message, context);
+      _showErrorPopup(
+          "Falló el pago con tarjeta de crédito,\n por favor intente ingresando otra");
     });
   }
 
@@ -484,6 +490,17 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
         message: message,
         context: context,
         function: _back,
+      ),
+    );
+  }
+
+  void _showErrorPopup(String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => ErrorCasePopup(
+        errorMessage: message,
+        context: context,
       ),
     );
   }

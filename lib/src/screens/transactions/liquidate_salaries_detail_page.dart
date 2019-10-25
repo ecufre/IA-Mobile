@@ -40,7 +40,7 @@ class _LiquidateSalariesDetailPageState
   Widget _appBar() {
     return AppBar(
       title: Text(
-        LocaleSingleton.strings.paySalaries,
+        LocaleSingleton.strings.liquidateSalaries,
         style: TextStyle(
           fontSize: 22.0,
           fontFamily: 'WorkSans Bold',

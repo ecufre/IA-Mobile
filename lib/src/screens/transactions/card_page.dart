@@ -216,15 +216,12 @@ class _CardPageState extends State<CardPage> {
         ),
         autocorrect: false,
         onSaved: (val) => _cardNumber = val,
-        validator: (val) => val.isEmpty
-            ? LocaleSingleton.strings.cardNumberError
-            : val.length < 16
-                ? LocaleSingleton.strings.cardNumberAmountError
-                : null,
+        validator: (val) =>
+            val.isEmpty ? LocaleSingleton.strings.cardNumberError : null,
         textCapitalization: TextCapitalization.sentences,
         noErrorsCallback: (bool val) => _confirmErrors(val),
         inputFormatters: [
-          LengthLimitingTextInputFormatter(16),
+          LengthLimitingTextInputFormatter(17),
           WhitelistingTextInputFormatter(
             GeneralRegex.regexOnlyNumbers,
           ),
@@ -248,7 +245,7 @@ class _CardPageState extends State<CardPage> {
         onFieldSubmitted: (String value) {
           FocusScope.of(context).requestFocus(textCvvCodeFocusNode);
         },
-        keyboardType: TextInputType.text,
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           labelText: LocaleSingleton.strings.expiryDate.toUpperCase(),
           hintText: "02/05",
@@ -313,7 +310,7 @@ class _CardPageState extends State<CardPage> {
         textCapitalization: TextCapitalization.sentences,
         noErrorsCallback: (bool val) => _confirmErrors(val),
         inputFormatters: [
-          LengthLimitingTextInputFormatter(3),
+          LengthLimitingTextInputFormatter(4),
           WhitelistingTextInputFormatter(
             GeneralRegex.regexOnlyNumbers,
           ),
@@ -401,7 +398,11 @@ class _CardPageState extends State<CardPage> {
     if (_validateAndSave()) {
       try {
         //se agrega el 20 para completar el formato de año YYYY
-        widget.function(_cardNumber, "20" + _expiryDate, _cvvCode, _dni);
+        widget.function(
+            _cardNumber,
+            "${_expiryDate[0]}${_expiryDate[1]}${_expiryDate[2]}20${_expiryDate[3]}${_expiryDate[4]}",
+            _cvvCode,
+            _dni);
         _saveCard();
       } catch (e) {
         print(e.toString());
