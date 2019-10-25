@@ -477,8 +477,7 @@ class _BillSuscriptionPageState extends State<BillSuscriptionPage> {
     }).catchError((error) {
       setState(() => _isLoading = false);
       errorCase(error.message, context);
-      _showErrorPopup(
-          "Falló el pago con tarjeta de crédito,\n por favor intente ingresando otra");
+      _showErrorPopup("Falló el pago");
     });
   }
 

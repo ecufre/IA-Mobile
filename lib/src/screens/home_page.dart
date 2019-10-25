@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ia_mobile/src/commons/ui.dart';
+import 'package:ia_mobile/src/helpers/error_case.dart';
 import 'package:ia_mobile/src/helpers/navigations/navigator.dart';
 import 'package:ia_mobile/src/locales/locale_singleton.dart';
 import 'package:ia_mobile/src/models/member.dart';
@@ -52,6 +53,9 @@ class _HomePageState extends State<HomePage> {
         _listMembers = result;
         _listFilterMembers.addAll(_listMembers);
       });
+    }).catchError((error) {
+      setState(() => _isLoading = false);
+      errorCase(error.message, context);
     });
   }
 
