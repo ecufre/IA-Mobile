@@ -108,6 +108,23 @@ class ApiModule {
 
   // GET
   getLiquidationEmployees(int month, int year) async {
+    String path = 'liquidaciones';
+    Map<String, String> _query = {
+      'mes': month.toString(),
+      'anio': year.toString(),
+    };
+    var uri = new Uri.http(baseUrl, modulePath + path, _query);
+    var response = await apiResponse.getJson(uri);
+    var jsonResult = json.decode(response.body);
+    if (jsonResult['successful']) {
+      return Employee().listFromJson(jsonResult['content']);
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // GET
+  getLiquidatedEmployees(int month, int year) async {
     String path = 'liquidaciones/pagar';
     Map<String, String> _query = {
       'mes': month.toString(),
@@ -242,7 +259,7 @@ class ApiModule {
   }
 
   // POST
-  paySalary(
+  createLiquidation(
     int idEmployee,
     int month,
     int year,

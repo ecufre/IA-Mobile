@@ -442,7 +442,7 @@ class _LiquidateSalariesDetailPageState
       padding: const EdgeInsets.symmetric(vertical: 25.0),
       child: CustomRaisedButton(
         text: LocaleSingleton.strings.paySalary.toUpperCase(),
-        function: () => _paySalary(),
+        function: () => _createLiquidation(),
         context: context,
         buttonColor: Ui.primaryColor,
         textColor: Colors.white,
@@ -453,10 +453,10 @@ class _LiquidateSalariesDetailPageState
     );
   }
 
-  _paySalary() {
+  _createLiquidation() {
     setState(() => _isLoading = true);
     ApiModule()
-        .paySalary(widget.employee.id, widget.month, widget.year)
+        .createLiquidation(widget.employee.id, widget.month, widget.year)
         .then((result) {
       setState(() {
         _isLoading = false;

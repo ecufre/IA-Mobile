@@ -15,7 +15,7 @@ class PaySalariesPage extends StatefulWidget {
 
 class _PaySalariesPageState extends State<PaySalariesPage> {
   List<Employee> _listEmployees = List();
-  bool _isLoading = true;
+  bool _isLoading = false;
   List<String> _listMonths = [
     "Enero",
     "Febrero",
@@ -34,33 +34,24 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
   String _month;
   String _year;
 
-  _getEmployees() {
-    ApiModule().getEmployees().then((result) {
+  _getLiquidatedEmployees(int month, int year) {
+    setState(() => _isLoading = true);
+    ApiModule().getLiquidatedEmployees(month, year).then((result) {
       setState(() {
         _isLoading = false;
         _listEmployees = result;
       });
     }).catchError((error) {
-      setState(() => _isLoading = false);
+      setState(() {
+        _listEmployees.clear();
+        _isLoading = false;
+      });
       errorCase(error.message, context);
     });
   }
 
-  //   _searchLiquidatedEmployees(int month, int year) {
-  //    ApiModule().getLiquidatedEmployee().then((result) {
-  //     setState(() {
-  //       _isLoading = false;
-  //       _listEmployees = result;
-  //     });
-  //   }).catchError((error) {
-  //     setState(() => _isLoading = false);
-  //     errorCase(error.message, context);
-  //   });
-  // }
-
   @override
   void initState() {
-    _getEmployees();
     super.initState();
   }
 
@@ -101,7 +92,7 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
             _monthFilter(),
             Divider(),
             _listEmployees.isNotEmpty ? _payButton() : SizedBox(),
-            _titleEmployees(),
+            _listEmployees.isNotEmpty ? _titleEmployees() : SizedBox(),
             _listUsers(),
           ],
         ),
@@ -231,7 +222,8 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
                 ),
               ),
               onPressed: _month != null && _year != null
-                  ? () => _paySalaries(_getMonthCode(_month), int.parse(_year))
+                  ? () => _getLiquidatedEmployees(
+                      _getMonthCode(_month), int.parse(_year))
                   : null,
               color: Ui.primaryColor,
               textColor: Colors.white,
@@ -343,6 +335,7 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
 
   _paySalaries(int month, int year) {
     ApiModule().paySalaries(month, year).then((result) {
+      _getLiquidatedEmployees(_getMonthCode(_month), int.parse(_year));
       _showPopup("Se pagaron todas las liquidaciones");
     }).catchError((error) {
       Navigator.pop(context);
@@ -351,7 +344,6 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
   }
 
   void _showPopup(String message) {
-    Navigator.pop(context);
     showDialog(
       barrierDismissible: false,
       context: context,
