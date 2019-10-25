@@ -34,8 +34,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
   String _email;
   String _dni;
   String _sex;
-  String _cbu;
-  String _cuit;
   bool _isLoading = false;
 
   TextEditingController _nameController = TextEditingController();
@@ -45,8 +43,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
   TextEditingController _doctorController = TextEditingController();
   TextEditingController _doctorPhoneController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
-  TextEditingController _cbuController = TextEditingController();
-  TextEditingController _cuitController = TextEditingController();
 
   FocusNode textNameFocusNode = FocusNode();
   FocusNode textLastNameFocusNode = FocusNode();
@@ -55,8 +51,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
   FocusNode textDoctorFocusNode = FocusNode();
   FocusNode textDoctorPhoneFocusNode = FocusNode();
   FocusNode textDateFocusNode = FocusNode();
-  FocusNode textCbuFocusNode = FocusNode();
-  FocusNode textCuitFocusNode = FocusNode();
 
   void _resetTextFocus() {
     textNameFocusNode.unfocus();
@@ -66,8 +60,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
     textDoctorFocusNode.unfocus();
     textDoctorPhoneFocusNode.unfocus();
     textDateFocusNode.unfocus();
-    textCbuFocusNode.unfocus();
-    textCuitFocusNode.unfocus();
   }
 
   @override
@@ -79,8 +71,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
     _doctorController.dispose();
     _doctorPhoneController.dispose();
     _dateController.dispose();
-    _cbuController.dispose();
-    _cuitController.dispose();
     super.dispose();
   }
 
@@ -204,8 +194,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
           _builtLastName(),
           _builtDNI(),
           _builtEmail(),
-          _builtCbu(),
-          _builtCuit(),
           _builtSex(),
         ],
       ),
@@ -385,7 +373,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
         ),
         autocorrect: false,
         onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(textCbuFocusNode);
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         validator: (val) => validator.emailValidator(val),
         onSaved: (val) => _email = val,
@@ -394,92 +382,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
         inputFormatters: [
           WhitelistingTextInputFormatter(
             GeneralRegex.regexWithoutSpace,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _builtCbu() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: CustomTextFormField(
-        controller: _cbuController,
-        focusNode: textCbuFocusNode,
-        key: Key('cbu'),
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Regular',
-          fontSize: 15.0,
-        ),
-        onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(textCuitFocusNode);
-        },
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.cbu.toUpperCase(),
-          labelStyle: TextStyle(
-            fontFamily: 'WorkSans Regular',
-            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
-            color: Colors.black,
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Ui.primaryColor),
-          ),
-        ),
-        autocorrect: false,
-        onSaved: (val) => _cbu = val,
-        validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.cbuError : null,
-        textCapitalization: TextCapitalization.sentences,
-        noErrorsCallback: (bool val) => _confirmErrors(val),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(22),
-          WhitelistingTextInputFormatter(
-            GeneralRegex.regexOnlyNumbers,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _builtCuit() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: CustomTextFormField(
-        controller: _cuitController,
-        focusNode: textCuitFocusNode,
-        key: Key('cuit'),
-        style: TextStyle(
-          color: Colors.black,
-          fontFamily: 'WorkSans Regular',
-          fontSize: 15.0,
-        ),
-        onFieldSubmitted: (String value) {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: LocaleSingleton.strings.cuit.toUpperCase(),
-          labelStyle: TextStyle(
-            fontFamily: 'WorkSans Regular',
-            fontSize: MediaQuery.of(context).size.height <= 640 ? 15.5 : 17.5,
-            color: Colors.black,
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Ui.primaryColor),
-          ),
-        ),
-        autocorrect: false,
-        onSaved: (val) => _cuit = val,
-        validator: (val) =>
-            val.isEmpty ? LocaleSingleton.strings.cuitError : null,
-        textCapitalization: TextCapitalization.sentences,
-        noErrorsCallback: (bool val) => _confirmErrors(val),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(11),
-          WhitelistingTextInputFormatter(
-            GeneralRegex.regexOnlyNumbers,
           ),
         ],
       ),
@@ -570,10 +472,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
           _detail(LocaleSingleton.strings.sex, _sex),
           Divider(),
           _detail(LocaleSingleton.strings.email, _email),
-          Divider(),
-          _detail(LocaleSingleton.strings.cbu, _cbu),
-          Divider(),
-          _detail(LocaleSingleton.strings.cuit, _cuit),
         ],
       ),
     );
@@ -682,8 +580,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
       _isLoading = true;
     });
     ApiModule()
-        .createMember(
-            _name, _lastName, _dni, _email, _sex, _cbu, _cuit, DateTime.now())
+        .createMember(_name, _lastName, _dni, _email, _sex, DateTime.now())
         .then((result) {
       setState(() {
         _isLoading = false;

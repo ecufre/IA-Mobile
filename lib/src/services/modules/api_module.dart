@@ -142,7 +142,7 @@ class ApiModule {
 
   // POST
   createMember(String name, String lastName, String dni, String email,
-      String sex, String cbu, String cuit, DateTime birthDate) async {
+      String sex, DateTime birthDate) async {
     String path = 'socios';
     var uri = new Uri.http(baseUrl, modulePath + path);
     Map<String, String> header = {
@@ -156,8 +156,8 @@ class ApiModule {
       "sexo": "Masculino",
       "fechaNacimiento": birthDate.toIso8601String(),
       "fechaAlta": DateTime.now().toIso8601String(),
-      "cbu": cbu,
-      "cuit": cuit
+      "cbu": null,
+      "cuit": null
     };
 
     var response = await apiResponse.postJson(uri, header, body);
@@ -332,6 +332,27 @@ class ApiModule {
     int year,
   ) async {
     String path = 'liquidaciones';
+    var uri = new Uri.http(baseUrl, modulePath + path);
+    Map<String, String> header = {
+      'Content-Type': 'application/json',
+    };
+    Map<String, dynamic> body = {'mes': month, 'anio': year};
+
+    var response = await apiResponse.patchJson(uri, header, body);
+    var jsonResult = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResult['successful']) {
+      return true;
+    } else {
+      throw Exception(jsonResult['message']);
+    }
+  }
+
+  // PATCH
+  payroll(
+    int month,
+    int year,
+  ) async {
+    String path = 'liquidaciones/nominas';
     var uri = new Uri.http(baseUrl, modulePath + path);
     Map<String, String> header = {
       'Content-Type': 'application/json',

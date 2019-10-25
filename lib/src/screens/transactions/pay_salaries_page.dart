@@ -334,7 +334,7 @@ class _PaySalariesPageState extends State<PaySalariesPage> {
   }
 
   _paySalaries(int month, int year) {
-    ApiModule().paySalaries(month, year).then((result) {
+    ApiModule().payroll(month, year).then((result) {
       _getLiquidatedEmployees(_getMonthCode(_month), int.parse(_year));
       _showPopup("Se pagaron todas las liquidaciones");
     }).catchError((error) {
