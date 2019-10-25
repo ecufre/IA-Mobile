@@ -2,6 +2,7 @@ class Strings {
   String title;
   String appTitle;
   String apiGenericError;
+  String apiNotFoundError;
   String emptyBody;
   String sectionError;
   String accept;

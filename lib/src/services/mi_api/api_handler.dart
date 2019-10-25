@@ -37,6 +37,9 @@ class ApiHandler {
   _generalError(var response) {
     String errorMessage;
     if (response.statusCode == 404) {
+      errorMessage = LocaleSingleton.strings.apiNotFoundError;
+    }
+    if (response.statusCode == 500) {
       errorMessage = LocaleSingleton.strings.apiGenericError;
     } else {
       var jsonResult = json.decode(utf8.decode(response.bodyBytes));

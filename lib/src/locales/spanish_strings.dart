@@ -5,6 +5,7 @@ class SpanishStrings extends Strings {
     super.appTitle = 'Gimnasio';
     super.apiGenericError =
         'Ocurrió un error \n al intentar acceder al sistema';
+    super.apiNotFoundError = 'Ocurrió un error,\n No se encontró el recurso';
     super.emptyBody = 'No hay resultados';
     super.accept = 'Aceptar';
     super.welcome = '¡Bienvenido!';
